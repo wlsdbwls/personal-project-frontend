@@ -22,10 +22,10 @@
 export default {
     methods: {
         goToNormalRegister() {
-            this.$router.push('/normal-register-page');
+            this.$router.push('/signup-normal-account');
         },
         goToBusinessRegister() {
-            this.$router.push('/business-register-page');
+            this.$router.push('/signup-business-account');
         }
     }
 }

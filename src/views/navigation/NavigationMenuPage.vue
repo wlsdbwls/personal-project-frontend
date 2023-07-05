@@ -80,7 +80,7 @@ export default {
       this.showAccountForm = !this.showAccountForm
     },
     goToLoginPage() {
-      router.push('/login').catch(() => { })
+      router.push('/signin').catch(() => { })
 
     },
     goToSelectAccountTypePage() {
