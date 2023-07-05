@@ -34,4 +34,18 @@ export default {
                 alert("문제 발생!")
             })
     },
+    requestBusinessRegisterAccountToSpring({ }, payload) {
+        const roleType = 'BUSINESS'; 
+        payload.roleType = roleType;
+        
+        return axiosInst.springAxiosInst.post('/account/business-register', payload)
+            .then((resBusinessRegister) => {
+                if (resBusinessRegister.data == true) {
+                    alert('사업자 회원 가입 성공')
+                    router.push('/signin')
+                } else {
+                    alert('사업자 회원 가입 실패!')
+                }
+            })
+    },
 }
