@@ -1,6 +1,10 @@
 import router from '@/router'
 import axiosInst from '@/utility/axiosInst'
 
+import {
+    LOGIN_COMPLETE
+} from './mutation-types'
+
 export default {
     requestNormalRegisterAccountToSpring({ }, payload) {
         const roleType = 'NORMAL'; // roleType 값을 'NORMAL'로 설정
@@ -48,14 +52,15 @@ export default {
                 }
             })
     },
-    requestLoginAccountToSpring({ }, payload) {
+    requestLoginAccountToSpring({ commit }, payload) {
 
         return axiosInst.springAxiosInst.post('/account/login', payload)
             .then((resLogin) => {
                 if (resLogin.data !== "") {
                     alert('로그인 성공!');
-                    localStorage.setItem("userToken", resLogin.data);
-                    return router.push('/').catch(() => {});
+                    router.push('/').catch(() => {});
+                    commit(LOGIN_COMPLETE, true)
+                    return localStorage.setItem("userToken", resLogin.data);
                 } else {
                     alert('이메일과 비밀번호를 다시 확인해주세요!');
                     location.reload();   

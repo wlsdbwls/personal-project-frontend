@@ -37,11 +37,17 @@
           </template>
           <v-card>
             <v-list>
-              <v-list-item @click="goToLoginPage">
+              <v-list-item v-if="!isAuthenticated" @click="goToLoginPage">
                 <v-list-item-title>로그인</v-list-item-title>
               </v-list-item>
-              <v-list-item @click="goToSelectAccountTypePage">
+              <v-list-item v-if="!isAuthenticated" @click="goToSelectAccountTypePage">
                 <v-list-item-title>회원가입</v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="isAuthenticated" @click="goToMyPage">
+                <v-list-item-title>마이 페이지</v-list-item-title>
+              </v-list-item>
+              <v-list-item v-if="isAuthenticated" @click="signOut">
+                <v-list-item-title>로그아웃</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-card>
@@ -56,42 +62,60 @@
 
 import router from '@/router'
 
+import {
+    LOGIN_COMPLETE,
+  } from '@/store/account/mutation-types'
+
+import { mapState, mapMutations } from 'vuex'
+
+const accountModule = 'accountModule'
+
 export default {
   data() {
     return {
       showAccountForm: false,
-      // userToken: null
+      userToken: null
     }
   },
-
+  computed: {
+      ...mapState(accountModule, ['isAuthenticated'])
+    },
   methods: {
+    ...mapMutations(accountModule, ['LOGIN_COMPLETE']),
     showFoodListPage() {
-      // 등록된 맛집 리스트 페이지로 넘어가도록
       router.push('/food-list-page').catch(() => { })
     },
     showFoodlogListPage() {
-      // 푸드로그 리스트 페이지로 넘어가도록
       router.push('/foodlog-list-page').catch(() => { })
     },
     showAccountInfo() {
-      // 누르면 폼이 뜨도록
-      // 로그인 안되어 있을 시 폼에 로그인이 뜨도록
-      // 로그인 되어 있을 시 폼에 로그아웃이 뜨도록
       this.showAccountForm = !this.showAccountForm
     },
     goToLoginPage() {
       router.push('/signin').catch(() => { })
-
     },
     goToSelectAccountTypePage() {
       router.push('/select-account-type').catch(() => { })
     },
     goToHome() {
       router.push('/').catch(() => { })
-    }
+    },
+    goToMyPage() {
+      router.push('/myPage').catch(() => { })
+    },
+    signOut() {
+      localStorage.removeItem("userToken")
+      this[LOGIN_COMPLETE](false)
+    },
   },
   mounted() {
-    // this.userToken = localStorage.getItem("userToken")
+    this.userToken = localStorage.getItem("userToken")
+
+    if (this.userToken == null) {
+          this[LOGIN_COMPLETE](false)
+        } else {
+          this[LOGIN_COMPLETE](true)
+        }
   },
 }
 </script>
