@@ -21,8 +21,8 @@ export default {
         console.log('email: ' + email)
 
         return axiosInst.springAxiosInst.get(`/account/check-email/${email}`)
-            .then((res) => {
-                if (res.data) {
+            .then((resCheckedEmail) => {
+                if (resCheckedEmail.data) {
                     alert('사용 가능한 이메일입니다!')
                     return true
                 } else {
@@ -45,6 +45,20 @@ export default {
                     router.push('/signin')
                 } else {
                     alert('사업자 회원 가입 실패!')
+                }
+            })
+    },
+    requestLoginAccountToSpring({ }, payload) {
+
+        return axiosInst.springAxiosInst.post('/account/login', payload)
+            .then((resLogin) => {
+                if (resLogin.data !== "") {
+                    alert('로그인 성공!');
+                    localStorage.setItem("userToken", resLogin.data);
+                    return router.push('/').catch(() => {});
+                } else {
+                    alert('이메일과 비밀번호를 다시 확인해주세요!');
+                    location.reload();   
                 }
             })
     },
