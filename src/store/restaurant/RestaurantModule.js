@@ -10,6 +10,8 @@ Vue.use(Vuex);
 const restaurantModule = {
   namespaced: true,
   actions,
+  state,
+  mutations,
 };
 
 export default restaurantModule;

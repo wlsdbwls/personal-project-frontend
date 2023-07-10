@@ -1,3 +1,7 @@
+import {
+  REQUEST_RESTAURANT_LIST_TO_SPRING,
+} from "./mutation-types";
+
 import axiosInst from "@/utility/axiosInst";
 
 export default {
@@ -11,4 +15,14 @@ export default {
         }
       })
   },
+  requestRestaurantListToSpring({ commit }) {
+    return axiosInst.springAxiosInst.get("/restaurant/list")
+      .then((resRestaurantList) => {
+        commit(REQUEST_RESTAURANT_LIST_TO_SPRING, resRestaurantList.data);
+      })
+      .catch((error) => {
+        alert('에러 발생!')
+      })
+  },
+
 };
