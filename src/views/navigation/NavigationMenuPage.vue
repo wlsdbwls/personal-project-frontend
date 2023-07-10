@@ -63,8 +63,8 @@
 import router from '@/router'
 
 import {
-    LOGIN_COMPLETE,
-  } from '@/store/account/mutation-types'
+  LOGIN_COMPLETE,
+} from '@/store/account/mutation-types'
 
 import { mapState, mapMutations } from 'vuex'
 
@@ -78,12 +78,12 @@ export default {
     }
   },
   computed: {
-      ...mapState(accountModule, ['isAuthenticated'])
-    },
+    ...mapState(accountModule, ['isAuthenticated'])
+  },
   methods: {
     ...mapMutations(accountModule, ['LOGIN_COMPLETE']),
     showFoodListPage() {
-      router.push('/food-list-page').catch(() => { })
+      router.push('/restaurant-list-page').catch(() => { })
     },
     showFoodlogListPage() {
       router.push('/foodlog-list-page').catch(() => { })
@@ -101,7 +101,7 @@ export default {
       router.push('/').catch(() => { })
     },
     goToMyPage() {
-      router.push('/myPage').catch(() => { })
+      router.push('/business-mypage').catch(() => { })
     },
     signOut() {
       localStorage.removeItem("userToken")
@@ -112,10 +112,10 @@ export default {
     this.userToken = localStorage.getItem("userToken")
 
     if (this.userToken == null) {
-          this[LOGIN_COMPLETE](false)
-        } else {
-          this[LOGIN_COMPLETE](true)
-        }
+      this[LOGIN_COMPLETE](false)
+    } else {
+      this[LOGIN_COMPLETE](true)
+    }
   },
 }
 </script>

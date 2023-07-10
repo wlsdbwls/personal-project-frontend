@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
 import accountRoutes from './account'
-
+import restaurantRoutes from "./restaurant";
 
 Vue.use(VueRouter)
 
@@ -14,6 +14,7 @@ const routes = [
     component: HomeView
   },
   ...accountRoutes,
+  ...restaurantRoutes,
 ]
 
 const router = new VueRouter({

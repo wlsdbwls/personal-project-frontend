@@ -5,6 +5,7 @@ import SelectAccountTypePage from '@/views/account/SelectAccountTypePage.vue'
 import NormalAccountRegisterPage from '@/views/account/NormalAccountRegisterPage.vue'
 import BusinessAccountRegisterPage from '@/views/account/BusinessAccountRegisterPage.vue'
 import AccountLoginPage from '@/views/account/AccountLoginPage.vue'
+import BusinessMyPage from '@/views/account/BusinessMyPage.vue'
 
 Vue.use(VueRouter)
 
@@ -28,6 +29,11 @@ const accountRoutes = [
         path: '/signin',
         name: 'AccountLoginPage',
         component: AccountLoginPage
+    },
+    {
+        path: '/business-mypage',
+        name: 'BusinessMyPage',
+        component: BusinessMyPage
     },
 ]
 
