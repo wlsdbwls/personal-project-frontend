@@ -1,7 +1,7 @@
 <template lang="">
     <v-container class="signupContainer">
     <v-card id="signupVcard" justify-center>
-        <h3>BUSINESS JOIN</h3>
+        <h1>BUSINESS JOIN</h1>
         <div>
             <v-card-text class="text-center px-12 py-16">
                 <v-form @submit.prevent="onSubmit" ref="form">
@@ -12,12 +12,14 @@
                                 label="email을 입력하세요" 
                                 :rules="email_rule"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                             <v-btn text large outlined style="font-size: 13px"
-                                    class="mt-3 ml-5" color="teal lighten-1"
+                                    class="mt-3 ml-1" color="teal lighten-1"
                                     @click="checkDuplicateEmail">
-                                    이메일 <br/>중복 확인
+                                    이메일 <br/>중복확인
                             </v-btn>
                             <!-- 
                                 중복 확인 버튼을 누르면 바로 이메일로 코드를 보냈다고 하고
@@ -34,10 +36,12 @@
                                 label="사업자 번호를 입력하세요" 
                                 :rules="businessNumber_rule"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                             <v-btn text large outlined style="font-size: 13px"
-                                    class="mt-3 ml-5" color="teal lighten-1"
+                                    class="mt-3 ml-1" color="teal lighten-1"
                                     @click="checkBusinessNumber">
                                     사업자 <br/>인증하기
                             </v-btn>
@@ -48,6 +52,8 @@
                                 label="password를 입력하세요" 
                                 :rules="password_rule"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                         </div>
@@ -57,6 +63,8 @@
                                 label="password를 확인하세요" 
                                 :rules="password_check"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                         </div>
@@ -151,13 +159,13 @@ export default {
 .signupContainer {
     display: flex;
     justify-content: center;
-    align-items: center;
 }
 
 #signupVcard {
     width: 460px;
-    height: 520px;
-    margin-top: 60px;
-    padding-top: 20px;
+    height: 610px;
+    margin-top: 30px;
+    padding-top: 30px;
+    padding-left: 18px;
 }
 </style>

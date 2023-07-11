@@ -1,4 +1,5 @@
 import {
+  REQUEST_RESTAURANT_TO_SPRING,
   REQUEST_RESTAURANT_LIST_TO_SPRING,
 } from "./mutation-types";
 
@@ -24,5 +25,14 @@ export default {
         alert('에러 발생!')
       })
   },
-
+  requestRestaurantToSpring({ commit }, id) {
+    return axiosInst.springAxiosInst.get(`/restaurant/${id}`)
+      .then((resRestaurantRead) => {
+        console.log("음식점 잘 읽는지 확인: " + JSON.stringify(resRestaurantRead.data));
+        commit(REQUEST_RESTAURANT_TO_SPRING, resRestaurantRead.data);
+      })
+      .catch(() => {
+        alert("상품이 존재하지 않습니다.");
+      });
+  },
 };

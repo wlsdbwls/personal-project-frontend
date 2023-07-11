@@ -12,6 +12,8 @@
                                 label="email을 입력하세요" 
                                 :rules="email_rule"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                             <v-btn text large outlined style="font-size: 13px"
@@ -34,6 +36,8 @@
                                 label="password를 입력하세요" 
                                 :rules="password_rule"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                         </div>
@@ -43,6 +47,8 @@
                                 label="password를 확인하세요" 
                                 :rules="password_check"
                                 :disabled="false"
+                                filled
+                                outlined
                                 required>
                             </v-text-field>
                         </div>
@@ -124,15 +130,15 @@ export default {
 </script>
 
 <style scoped>
-    .signupContainer {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-    #signupVcard {
-        width: 460px;
-        height: 520px;
-        margin-top: 60px;
-        padding-top: 20px;
-    }
+.signupContainer {
+    display: flex;
+    justify-content: center;
+}
+
+#signupVcard {
+    width: 460px;
+    height: 530px;
+    margin-top: 30px;
+    padding-top: 50px;
+}
 </style>
