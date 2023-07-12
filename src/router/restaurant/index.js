@@ -5,6 +5,8 @@ import RestaurantListPage from "@/views/restaurant/RestaurantListPage.vue";
 import RestaurantRegisterPage from "@/views/restaurant/RestaurantRegisterPage.vue";
 import RestaurantReadPage from "@/views/restaurant/RestaurantReadPage.vue";
 
+import BusinessRegisteredRestaurantsPage from '@/views/restaurant/business/BusinessRegisteredRestaurantsPage.vue'
+
 Vue.use(VueRouter);
 
 const restaurantRoutes = [
@@ -27,6 +29,11 @@ const restaurantRoutes = [
     props: {
       default: true,
     },
+  },
+  {
+    path: '/my-registered-restaurant',
+    name: 'BusinessRegisteredRestaurantsPage',
+    component: BusinessRegisteredRestaurantsPage
   },
 ];
 

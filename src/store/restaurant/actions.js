@@ -1,6 +1,7 @@
 import {
   REQUEST_RESTAURANT_TO_SPRING,
   REQUEST_RESTAURANT_LIST_TO_SPRING,
+  REQUEST_BUSINESS_RESTAURANT_LIST_TO_SPRING
 } from "./mutation-types";
 
 import axiosInst from "@/utility/axiosInst";
@@ -12,7 +13,7 @@ export default {
         if (resRestaurantRegister.data) {
           return resRestaurantRegister.data;
         } else {
-          alert("음식점 등록 불가!");
+          alert("맛집 등록 불가!");
         }
       })
   },
@@ -28,11 +29,22 @@ export default {
   requestRestaurantToSpring({ commit }, id) {
     return axiosInst.springAxiosInst.get(`/restaurant/${id}`)
       .then((resRestaurantRead) => {
-        console.log("음식점 잘 읽는지 확인: " + JSON.stringify(resRestaurantRead.data));
+        console.log("맛집 잘 읽는지 확인: " + JSON.stringify(resRestaurantRead.data));
         commit(REQUEST_RESTAURANT_TO_SPRING, resRestaurantRead.data);
       })
       .catch(() => {
-        alert("상품이 존재하지 않습니다.");
+        alert("맛집이 존재하지 않습니다.");
       });
+  },
+  requestBusinessRestaurantListToSpring({ commit }, payload) {
+    return axiosInst.springAxiosInst.post("/restaurant/business-restaurant-list", payload)
+      .then((resBusiResisteredList) => {
+        console.log('받아올 수 있는거니?: ' + resBusiResisteredList.data)
+        commit(REQUEST_BUSINESS_RESTAURANT_LIST_TO_SPRING, resBusiResisteredList.data);
+        // return resBusiResisteredList.data
+      })
+      .catch(() => {
+        alert("통신이 불가합니다")
+      })
   },
 };
