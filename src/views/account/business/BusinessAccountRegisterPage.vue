@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import BusinessAccountRegisterForm from '@/components/account/BusinessAccountRegisterForm.vue';
+import BusinessAccountRegisterForm from '@/components/account/business/BusinessAccountRegisterForm.vue';
 import { mapActions } from 'vuex';
 
 const accountModule = 'accountModule'

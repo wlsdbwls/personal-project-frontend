@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import NormalAccountRegisterForm from '@/components/account/NormalAccountRegisterForm.vue';
+import NormalAccountRegisterForm from '@/components/account/normal/NormalAccountRegisterForm.vue';
 import { mapActions } from 'vuex';
 
 const accountModule = 'accountModule'

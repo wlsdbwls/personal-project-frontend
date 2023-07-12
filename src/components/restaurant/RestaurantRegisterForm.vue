@@ -53,11 +53,6 @@
 </template>
 
 <script>
-
-import { mapActions } from 'vuex';
-
-const restaurantModule = 'restaurantModule'
-
 export default {
   data() {
     return {
@@ -68,10 +63,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(
-      restaurantModule, ['requestRestaurantRegisterToSpring']
-    ),
-
     async onSubmit() {
       let formData = new FormData()
       let aboutRestaurant = {
@@ -96,15 +87,12 @@ export default {
     handleFileUpload() {
       this.files = this.$refs.files.files
 
-      // Create an empty array to store the image URLs
       this.imagePreviews = [];
 
-      // Loop through each file and create a URL for preview
       for (let idx = 0; idx < this.files.length; idx++) {
         const file = this.files[idx];
         const reader = new FileReader();
 
-        // Read the file and create a URL for preview
         reader.onload = (e) => {
           this.imagePreviews.push(e.target.result);
         };

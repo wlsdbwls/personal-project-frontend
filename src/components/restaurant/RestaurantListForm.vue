@@ -26,15 +26,14 @@
         </template>
         <p></p>
         <div>
-            <input type="text" :value="searchTerm" @change="searchTerm = $event.target.value" placeholder="상품명을 입력하세요" />
-            <v-btn :small=true color="#f18893" raised @click="findProduct">검색</v-btn>
+            <input type="text" :value="searchTerm" @change="searchTerm = $event.target.value" placeholder="상호명을 입력하세요" />
+            <v-btn :small=true color="#f18893" raised @click="findRestaurant">검색</v-btn>
         </div>
     </v-container>
 </template>
 
 
 <script>
-import axiosInst from '@/utility/axiosInst';
 import { mapActions, mapState } from 'vuex';
 
 const restaurantModule = 'restaurantModule'
@@ -56,10 +55,10 @@ export default {
     computed: {
         ...mapState(restaurantModule, ['restaurants']),
         findRestaurant() {
-            const filteredRestaurants = this.restaurants.filter((restaurant) =>
+            const restaurants = this.restaurants.filter((restaurant) =>
                 restaurant.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
             );
-            return filteredRestaurants;
+            return restaurants;
         },
     },
     data() {
