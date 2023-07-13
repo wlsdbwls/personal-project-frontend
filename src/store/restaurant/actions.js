@@ -58,4 +58,19 @@ export default {
         alert("맛집이 존재하지 않습니다.");
       });
   },
+  requestModifyRestaurantToSpring({ }, payload) {
+    const { restaurantName, restaurantInfo, id } = payload;
+    return axiosInst.springAxiosInst.put(`/restaurant/${id}`, { restaurantName, restaurantInfo, id })
+      .then((resRestaurantModify) => {
+        if (resRestaurantModify.data) {
+          alert("상품이 수정되었습니다.");
+          return resRestaurantModify.data;
+        } else {
+          alert("상품 수정 불가!");
+        }
+      })
+      .catch(() => {
+        alert("통신 실패");
+      });
+  },
 };
