@@ -21,9 +21,6 @@
                 </v-flex>
             </template>
         </v-layout>
-        <template v-slot:item.restaurantName="{ item }">
-            <td @click="handleCellClick(item)">{{ item.restaurantName }}</td>
-        </template>
         <p></p>
         <div>
             <input type="text" :value="searchTerm" @change="searchTerm = $event.target.value" placeholder="상호명을 입력하세요" />
@@ -39,13 +36,19 @@ import { mapActions, mapState } from 'vuex';
 const restaurantModule = 'restaurantModule'
 
 export default {
+    data() {
+        return {
+            userToken: '',
+            searchTerm: '',
+            id: null
+        };
+    },
     methods: {
         ...mapActions(restaurantModule, ['requestRestaurantListToSpring']),
-        restaurantRead(item) {
-            this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } })
-        },
         handleCellClick(item) {
-            this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } })
+            this.id = item.id; // id 값을 설정
+            this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } });
+            console.log(this.id); // 설정된 id 값 확인
         },
     },
     mounted() {
@@ -60,12 +63,6 @@ export default {
             );
             return restaurants;
         },
-    },
-    data() {
-        return {
-            userToken: '',
-            searchTerm: '',
-        };
     },
 }
 </script>

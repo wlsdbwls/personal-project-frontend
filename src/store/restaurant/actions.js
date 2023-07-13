@@ -1,7 +1,8 @@
 import {
   REQUEST_RESTAURANT_TO_SPRING,
   REQUEST_RESTAURANT_LIST_TO_SPRING,
-  REQUEST_BUSINESS_RESTAURANT_LIST_TO_SPRING
+  REQUEST_BUSINESS_RESTAURANT_LIST_TO_SPRING,
+  REQUEST_BUSINESS_RESTAURANT_TO_SPRING
 } from "./mutation-types";
 
 import axiosInst from "@/utility/axiosInst";
@@ -20,6 +21,7 @@ export default {
   requestRestaurantListToSpring({ commit }) {
     return axiosInst.springAxiosInst.get("/restaurant/list")
       .then((resRestaurantList) => {
+        console.log('받아올 수 있는거니?: ' + resRestaurantList.data)
         commit(REQUEST_RESTAURANT_LIST_TO_SPRING, resRestaurantList.data);
       })
       .catch((error) => {
@@ -41,10 +43,19 @@ export default {
       .then((resBusiResisteredList) => {
         console.log('받아올 수 있는거니?: ' + resBusiResisteredList.data)
         commit(REQUEST_BUSINESS_RESTAURANT_LIST_TO_SPRING, resBusiResisteredList.data);
-        // return resBusiResisteredList.data
       })
       .catch(() => {
         alert("통신이 불가합니다")
       })
+  },
+  requestBusinessRestaurantToSpring({ commit }, id) {
+    return axiosInst.springAxiosInst.get(`/restaurant/business-restaurant/${id}`)
+      .then((resBusiRestaurantRead) => {
+        console.log("맛집 잘 읽는지 확인: " + JSON.stringify(resBusiRestaurantRead.data));
+        commit(REQUEST_BUSINESS_RESTAURANT_TO_SPRING, resBusiRestaurantRead.data);
+      })
+      .catch(() => {
+        alert("맛집이 존재하지 않습니다.");
+      });
   },
 };

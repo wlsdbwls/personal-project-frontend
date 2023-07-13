@@ -1,14 +1,14 @@
 <template>
     <v-container grid-list-xl>
         <v-layout row wrap>
-            <template v-for="item in findMyRestaurant">
+            <template v-for="myRestaurant in findMyRestaurant">
                 <v-flex xs12 sm6 md4 lg3 xl2>
-                    <v-card @click="handleCellClick(item)">
-                        <v-img :src="require(`@/assets/uploadImgs/${item.restaurantImagePath}`)">
+                    <v-card @click="handleCellClick(myRestaurant)">
+                        <v-img :src="require(`@/assets/uploadImgs/${myRestaurant.restaurantImagePath}`)">
                         </v-img>
                         <v-card-text>
                             <!-- <div>{{ restaurant.type }}</div> 음식점 타입 추가하기!! -->
-                            <div>{{ item.restaurantName }}</div>
+                            <div>{{ myRestaurant.restaurantName }}</div>
                         </v-card-text>
                         <v-divider />
                         <v-card-actions>
@@ -21,9 +21,6 @@
                 </v-flex>
             </template>
         </v-layout>
-        <template v-slot:item.restaurantName="{ item }">
-            <td @click="handleCellClick(item)">{{ item.restaurantName }}</td>
-        </template>
         <p></p>
         <div>
             <input type="text" :value="searchTerm" @change="searchTerm = $event.target.value" placeholder="상호명을 입력하세요" />
@@ -43,15 +40,13 @@ export default {
         return {
             userToken: '',
             searchTerm: '',
+            id: null
         };
     },
     methods: {
         ...mapActions(restaurantModule, ['requestBusinessRestaurantListToSpring']),
-        restaurantRead(item) {
-            this.$router.push({ name: 'BusinessRestaurantReadPage', params: { id: item.id } })
-        },
-        handleCellClick(item) {
-            this.$router.push({ name: 'BusinessRestaurantReadPage', params: { id: item.id } })
+        handleCellClick(myRestaurant) {
+            this.$router.push({ name: 'BusinessRestaurantReadPage', params: { id: myRestaurant.id } })
         },
     },
     async created() {
@@ -59,10 +54,10 @@ export default {
         await this.requestBusinessRestaurantListToSpring({ userToken: this.userToken })
     },
     computed: {
-        ...mapState(restaurantModule, ['filteredRestaurant']),
+        ...mapState(restaurantModule, ['filteredRestaurants']),
         findMyRestaurant() {
-            return this.filteredRestaurant.filter((filteredRestaurant) =>
-                filteredRestaurant.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
+            return this.filteredRestaurants.filter((filteredRestaurants) =>
+                filteredRestaurants.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
             );
         },
     },

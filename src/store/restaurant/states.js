@@ -1,6 +1,7 @@
 export default {
   restaurant: {},
   restaurants: [],
-  filteredRestaurant: []
+  filteredRestaurants: [],
+  filteredRestaurant: {}
 };
 
