@@ -30,36 +30,41 @@ import router from "@/router";
 const restaurantModule = 'restaurantModule'
 
 export default {
-    name: "BusinessRestaurantReadPage",
-    props: {
-        id: {
-            type: Number,
-            required: true,
-        },
+  name: "BusinessRestaurantReadPage",
+  props: {
+    id: {
+      type: Number,
+      required: true,
     },
-    components: {
-        BusinessRestaurantReadForm
-    },
-    computed: {
-        ...mapState(restaurantModule, ["filteredRestaurant"]),
+  },
+  components: {
+    BusinessRestaurantReadForm
+  },
+  computed: {
+    ...mapState(restaurantModule, ["filteredRestaurant"]),
 
+  },
+  methods: {
+    ...mapActions(restaurantModule, ["requestBusinessRestaurantToSpring", "requestDeleteRestaurantToSpring"]),
+    goToMyRestaurantListPage() {
+      router.push("/business-registered-restaurant");
     },
-    methods: {
-        ...mapActions(restaurantModule, ["requestBusinessRestaurantToSpring",]),
-        goToMyRestaurantListPage() {
-            router.push("/business-registered-restaurant");
-        },
-        goToRestaurantModifyPage() {
-            this.$router.push({ name: "RestaurantModifyPage", params: { id: this.id } });
-        },
-        restaurantDelete() {
-
-        },
+    goToRestaurantModifyPage() {
+      this.$router.push({ name: "RestaurantModifyPage", params: { id: this.id } });
     },
-    created() {
-        this.requestBusinessRestaurantToSpring(this.id)
-        console.log(this.id)
+    async restaurantDelete() {
+      if (!confirm("맛집을 삭제하시겠습니까?")) {
+      } else {
+        await alert("등록하신 맛집이 삭제되었습니다.");
+        await this.requestDeleteRestaurantToSpring(this.id);
+        await this.goToMyRestaurantListPage();
+      }
     },
+  },
+  created() {
+    this.requestBusinessRestaurantToSpring(this.id)
+    console.log(this.id)
+  },
 }
 </script>
 <style lang="">

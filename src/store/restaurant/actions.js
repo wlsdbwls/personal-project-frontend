@@ -73,4 +73,12 @@ export default {
         alert("통신 실패");
       });
   },
+  requestDeleteRestaurantToSpring({ }, id) {
+    return axiosInst.springAxiosInst.delete(`/restaurant/${id}`)
+      .then((resRestaurantDelete) => {
+      })
+      .catch(() => {
+        alert("상품삭제 실패");
+      });
+  },
 };

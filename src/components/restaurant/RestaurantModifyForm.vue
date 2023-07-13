@@ -7,19 +7,19 @@
           <tr>
             <td style="font-weight: bold">상호명</td>
             <td>
-                <v-text-field color="#f18893" type="text" class="inputValue" v-model="restaurantName"/>
+                <v-text-field type="text" class="inputValue" v-model="restaurantName"/>
             </td>
           </tr>
           <tr>
             <td style="font-weight: bold">음식점 정보</td>
             <td>
-                <v-textarea color="#f18893" class="inputValue" rows="4" v-model="restaurantInfo"/>
+                <v-textarea class="inputValue" rows="4" v-model="restaurantInfo"/>
             </td>
           </tr>
         </table>
       <div>
-        <v-btn @click="modifyBtn" class="detailbox1" color="#f18893">수정완료</v-btn>
-            <router-link :to="{
+        <v-btn @click="modifyBtn" class="detailbox1">수정완료</v-btn>
+        <router-link :to="{
                 name: 'BusinessRegisteredRestaurantsPage',
                 params: { id: this.restaurant.id }
             }">취소</router-link>
@@ -64,7 +64,7 @@ export default {
 </script>
 <style scoped>
 .detailbox1 {
-    margin: 70px;
+    margin: 20px;
 }
 
 table td {
