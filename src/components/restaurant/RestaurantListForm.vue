@@ -4,7 +4,7 @@
             <template v-for="item in findRestaurant">
                 <v-flex xs12 sm6 md4 lg3 xl2>
                     <v-card @click="handleCellClick(item)">
-                        <v-img :src="require(`@/assets/uploadImgs/${item.restaurantImagePath}`)"></v-img>
+                        <v-img :src="getS3ImageUrl(item.restaurantImagePath)"></v-img>
                         <v-card-text>
                             <!-- <div>{{ restaurant.type }}</div> 음식점 타입 추가하기!! -->
                             <div>{{ item.restaurantName }}</div>
@@ -29,6 +29,7 @@
 
 <script>
 import { mapActions, mapState } from 'vuex';
+import env from '@/env'
 
 const restaurantModule = 'restaurantModule';
 
@@ -65,6 +66,13 @@ export default {
 
             // localStorage에 찜한 음식점 ID 저장
             localStorage.setItem('likedRestaurants', JSON.stringify(this.likedRestaurants));
+        },
+
+        getS3ImageUrl(imageKey) {
+            const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
+            const bucketName = env.api.MAIN_AWS_BUCKET_NAME
+
+            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
         }
     },
     mounted() {
