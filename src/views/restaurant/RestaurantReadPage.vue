@@ -5,7 +5,7 @@
     <p v-else>로딩중 ...</p>
     <v-container fluid>
       <v-row justify="center">
-        <user-review-form @submit-review="submitReview"/>
+        <user-review-form @submit="submitReview"/>
       </v-row>
       <!-- 후기 등록 폼 아래에 등록된 후기들 나열 -->
       <v-col justify="center">
@@ -33,10 +33,12 @@ export default {
       required: true,
     },
   },
+
   components: {
     RestaurantReadForm,
     UserReviewForm,
   },
+
   computed: {
     ...mapState(restaurantModule, ["restaurant"]),
     ...mapState(reviewModule, ["review"]),
@@ -53,17 +55,17 @@ export default {
       router.push("/restaurant-list-page");
     },
 
-    submitReview() {
-      this.requestRestaurantReviewToSpring(this.review)
-      console.log('후기 저장:', this.review);
-      this.review = {  // 후기 작성 후 초기화
-        comment: '',
-        ratings: ''
-      };
-    }
+    async submitReview(payload) {
+      await this.requestRestaurantReviewToSpring(payload)
+
+      // 후기 작성 후 초기화
+      // this.$refs.userReviewForm.comment = "";
+      // this.$refs.userReviewForm.ratings = "";
+    },
   },
-  created() {
-    this.requestRestaurantToSpring(this.id);
+
+  async created() {
+    await this.requestRestaurantToSpring(this.id)
   }
 }
 </script>

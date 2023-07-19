@@ -5,11 +5,13 @@ import {
 } from "./mutation-types";
 
 export default {
-    requestRestaurantReviewToSpring({ commit }, payload) {
-        return axiosInst.springAxiosInst.post("/review/register", payload)
+    requestRestaurantReviewToSpring({ }, payload) {
+        const { ratings, comment, userToken } = payload
+
+        return axiosInst.springAxiosInst.post("/review/register", { ratings, comment, userToken })
             .then((resReview) => {
                 console.log('작성한 리뷰: ' + resReview.data)
-                commit(REQUEST_REVIEW_TO_SPRING, resReview.data)
+                return resReview.data
             })
             .catch(() => {
                 alert("통신이 불가합니다")

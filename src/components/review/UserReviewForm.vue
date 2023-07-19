@@ -9,15 +9,15 @@
             <div>
                 <label style="margin-top: 20px;">평점:</label>
                 <div class="star-rating space-x-4 mx-auto">
-                    <input type="radio" id="5-stars" name="rating" value="5" v-model="review.ratings" />
+                    <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings" />
                     <label for="5-stars" class="star pr-4">★</label>
-                    <input type="ㅌadio" id="4-stars" name="rating" value="4" v-model="review.ratings" />
+                    <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings" />
                     <label for="4-stars" class="star">★</label>
-                    <input type="radio" id="3-stars" name="rating" value="3" v-model="review.ratings" />
+                    <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings" />
                     <label for="3-stars" class="star">★</label>
-                    <input type="radio" id="2-stars" name="rating" value="2" v-model="review.ratings" />
+                    <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings" />
                     <label for="2-stars" class="star">★</label>
-                    <input type="radio" id="1-star" name="rating" value="1" v-model="review.ratings" />
+                    <input type="radio" id="1-star" name="rating" value="1" v-model="ratings" />
                     <label for="1-star" class="star">★</label>
                 </div>
             </div>
@@ -29,10 +29,10 @@
             </div> -->
             <div>
                 <label style="margin-top: 20px;" for="comment">후기:</label>
-                <textarea style="height: 100px; width: 500px;" class="writeValue" id="comment" v-model="review.comment"
+                <textarea style="height: 100px; width: 500px;" class="writeValue" id="comment" v-model="comment"
                     required></textarea>
             </div>
-            <v-btn type="submit">후기 작성</v-btn>
+            <v-btn raised type="submit">후기 작성</v-btn>
         </form>
     </div>
 </template>
@@ -48,20 +48,16 @@ export default {
         return {
             email: '',
             userToken: '',
-            review: {
-                comment: '',
-                ratings: ''
-            }
+            comment: '',
+            ratings: ''
         }
     },
     methods: {
         submitReview() {
-            console.log('후기 저장:', this.review);
-            this.review = {
-                comment: '',
-                ratings: ''
-            };
-            this.$emit('submit-review', this.review);
+            const { comment, ratings, userToken } = this
+            console.log('후기 저장:', this.comment, this.ratings)
+
+            this.$emit('submit', { comment, ratings, userToken })
         },
 
         ratingToPercent() {
