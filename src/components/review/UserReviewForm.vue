@@ -3,7 +3,7 @@
         <h2>후기 작성 폼</h2>
         <form @submit.prevent="submitReview">
             <div>
-                <label for="name">{{ email }}님, 후기를 작성해 주세요!</label>
+                <label for="name">{{ email }}님, {{ restaurantName }} 후기를 작성해 주세요!</label>
                 <!-- 일단 이메일로 설정 후 닉네임으로 수정할 것 -->
             </div>
             <div>
@@ -32,7 +32,7 @@
                 <textarea style="height: 100px; width: 500px;" class="writeValue" id="comment" v-model="comment"
                     required></textarea>
             </div>
-            <v-btn raised type="submit">후기 작성</v-btn>
+            <v-btn raised type="submit">후기 등록</v-btn>
         </form>
     </div>
 </template>
@@ -44,20 +44,27 @@ import { mapActions } from "vuex"
 const accountModule = 'accountModule'
 
 export default {
+    props: {
+        restaurantName: {
+            type: String,
+            required: true,
+        },
+    },
     data() {
         return {
             email: '',
             userToken: '',
             comment: '',
-            ratings: ''
+            ratings: '',
+            // restaurantName: '',
         }
     },
     methods: {
         submitReview() {
-            const { comment, ratings, userToken } = this
-            console.log('후기 저장:', this.comment, this.ratings)
+            const { comment, ratings, userToken, restaurantName } = this
+            console.log('내가 준 점수:', this.ratings, '내가 준 후기 코멘트:', this.comment)
 
-            this.$emit('submit', { comment, ratings, userToken })
+            this.$emit('submit', { comment, ratings, userToken, restaurantName })
         },
 
         ratingToPercent() {

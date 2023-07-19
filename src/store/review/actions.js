@@ -6,9 +6,9 @@ import {
 
 export default {
     requestRestaurantReviewToSpring({ }, payload) {
-        const { ratings, comment, userToken } = payload
+        const { ratings, comment, userToken, restaurantName } = payload
 
-        return axiosInst.springAxiosInst.post("/review/register", { ratings, comment, userToken })
+        return axiosInst.springAxiosInst.post("/review/register", { ratings, comment, userToken, restaurantName })
             .then((resReview) => {
                 console.log('작성한 리뷰: ' + resReview.data)
                 return resReview.data

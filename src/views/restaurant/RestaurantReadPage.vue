@@ -1,11 +1,15 @@
 <template lang="">
   <div>
   <h1>맛집 상세 페이지</h1>
-    <restaurant-read-form v-if="restaurant" :restaurant="restaurant" />
-    <p v-else>로딩중 ...</p>
+    <template v-if="restaurant">
+          <restaurant-read-form :restaurant="restaurant" />
+        </template>
+        <template v-else>
+          <p>로딩중 ...</p>
+        </template>
     <v-container fluid>
       <v-row justify="center">
-        <user-review-form @submit="submitReview"/>
+        <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
       </v-row>
       <!-- 후기 등록 폼 아래에 등록된 후기들 나열 -->
       <v-col justify="center">
@@ -41,7 +45,7 @@ export default {
 
   computed: {
     ...mapState(restaurantModule, ["restaurant"]),
-    ...mapState(reviewModule, ["review"]),
+    // ...mapState(reviewModule, ["review"]),
   },
   methods: {
     ...mapActions(restaurantModule, [
