@@ -6,8 +6,7 @@
                     <v-carousel>
                         <v-carousel-item v-for="(restaurantImagePath, idx) in filteredRestaurant.restaurantImagesPathList"
                             :key="idx" :width="550" :height="550">
-                            <v-img :src="require(`@/assets/uploadImgs/${restaurantImagePath}`)">
-                            </v-img>
+                            <v-img :src="getS3ImageUrl(restaurantImagePath)"></v-img>
                         </v-carousel-item>
                     </v-carousel>
                     <v-card-text>
@@ -21,6 +20,8 @@
 </template>
 
 <script>
+import env from '@/env'
+
 export default {
     name: "BusinessRestaurantReadForm",
     props: {
@@ -28,6 +29,14 @@ export default {
             type: Object,
             required: true,
         },
+    },
+    methods: {
+        getS3ImageUrl(imageKey) {
+            const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
+            const bucketName = env.api.MAIN_AWS_BUCKET_NAME
+
+            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
+        }
     },
 };
 </script>
