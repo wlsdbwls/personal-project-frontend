@@ -6,8 +6,7 @@
           <v-carousel>
             <v-carousel-item v-for="(restaurantImagePath, idx) in restaurant.restaurantImagesPathList" :key="idx"
               :width="550" :heigth="550">
-              <v-img :src="require(`@/assets/uploadImgs/${restaurantImagePath}`)">
-              </v-img>
+              <v-img :src="getS3ImageUrl(restaurantImagePath)"></v-img>
             </v-carousel-item>
           </v-carousel>
           <v-card-text>
@@ -26,6 +25,8 @@
 </template>
 
 <script>
+import env from '@/env'
+
 export default {
   name: "RestaurantReadForm",
   props: {
@@ -67,6 +68,13 @@ export default {
 
       // localStorage에 찜한 음식점 ID 저장
       localStorage.setItem('likedRestaurants', JSON.stringify(this.likedRestaurants));
+    },
+
+    getS3ImageUrl(imageKey) {
+      const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
+      const bucketName = env.api.MAIN_AWS_BUCKET_NAME
+
+      return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
     }
   },
 };
