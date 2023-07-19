@@ -9,7 +9,9 @@ import axiosInst from "@/utility/axiosInst";
 
 export default {
   requestRestaurantRegisterToSpring({ }, payload) {
-    return axiosInst.springAxiosInst.post("/restaurant/register", payload)
+    const { restaurantName, restaurantInfo, userToken, imageUrls } = payload
+
+    return axiosInst.springAxiosInst.post("/restaurant/register", { restaurantName, restaurantInfo, userToken, imageUrls })
       .then((resRestaurantRegister) => {
         if (resRestaurantRegister.data) {
           return resRestaurantRegister.data;
