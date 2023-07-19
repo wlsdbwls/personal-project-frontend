@@ -2,16 +2,16 @@
   <div>
   <h1>맛집 상세 페이지</h1>
     <template v-if="restaurant">
-          <restaurant-read-form :restaurant="restaurant" />
-        </template>
-        <template v-else>
-          <p>로딩중 ...</p>
-        </template>
+      <restaurant-read-form :restaurant="restaurant" />
+    </template>
+    <template v-else>
+      <p>로딩중 ...</p>
+    </template>
     <v-container fluid>
       <v-row justify="center">
+        <user-review-list-form :restaurantName="restaurant.restaurantName" />
         <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
       </v-row>
-      <!-- 후기 등록 폼 아래에 등록된 후기들 나열 -->
       <v-col justify="center">
         <v-btn class="centered-button" @click="goToRestaurantListPage">목록으로</v-btn>
       </v-col>      
@@ -22,6 +22,7 @@
 <script>
 import RestaurantReadForm from "@/components/restaurant/RestaurantReadForm.vue";
 import UserReviewForm from '@/components/review/UserReviewForm.vue'
+import UserReviewListForm from '@/components/review/UserReviewListForm.vue'
 
 import { mapActions, mapState } from "vuex"
 import router from "@/router"
@@ -41,6 +42,7 @@ export default {
   components: {
     RestaurantReadForm,
     UserReviewForm,
+    UserReviewListForm,
   },
 
   computed: {
@@ -52,17 +54,18 @@ export default {
       "requestRestaurantToSpring",
     ]),
     ...mapActions(reviewModule, [
-      "requestRestaurantReviewToSpring",
+      "requestReviewToSpring",
     ]),
+    ...mapActions(reviewModule, ['requestReviewListToSpring']),
 
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");
     },
 
     async submitReview(payload) {
-      await this.requestRestaurantReviewToSpring(payload)
+      await this.requestReviewToSpring(payload)
 
-      // 후기 작성 후 초기화
+      // Todo: 후기 작성 후 초기화
       // this.$refs.userReviewForm.comment = "";
       // this.$refs.userReviewForm.ratings = "";
     },
@@ -70,6 +73,8 @@ export default {
 
   async created() {
     await this.requestRestaurantToSpring(this.id)
+    await this.requestReviewListToSpring({ restaurantName: this.restaurant.restaurantName });
+
   }
 }
 </script>

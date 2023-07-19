@@ -56,7 +56,6 @@ export default {
             userToken: '',
             comment: '',
             ratings: '',
-            // restaurantName: '',
         }
     },
     methods: {
