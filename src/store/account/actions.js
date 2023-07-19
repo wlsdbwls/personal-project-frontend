@@ -12,7 +12,7 @@ export default {
 
         return axiosInst.springAxiosInst.post('/account/normal-register', payload)
             .then((resNormalRegister) => {
-                if(resNormalRegister.data == true) {
+                if (resNormalRegister.data == true) {
                     alert('개인 회원 가입 성공')
                     router.push('/signin')
                 } else {
@@ -39,9 +39,9 @@ export default {
             })
     },
     requestBusinessRegisterAccountToSpring({ }, payload) {
-        const roleType = 'BUSINESS'; 
+        const roleType = 'BUSINESS';
         payload.roleType = roleType;
-        
+
         return axiosInst.springAxiosInst.post('/account/business-register', payload)
             .then((resBusinessRegister) => {
                 if (resBusinessRegister.data == true) {
@@ -58,13 +58,27 @@ export default {
             .then((resLogin) => {
                 if (resLogin.data !== "") {
                     alert('로그인 성공!');
-                    router.push('/').catch(() => {});
+                    router.push('/').catch(() => { });
                     commit(LOGIN_COMPLETE, true)
                     return localStorage.setItem("userToken", resLogin.data);
                 } else {
                     alert('이메일과 비밀번호를 다시 확인해주세요!');
-                    location.reload();   
+                    location.reload();
                 }
+            })
+    },
+    requestEmailToSpring({ }, payload) {
+        const { userToken } = payload
+
+        return axiosInst.springAxiosInst.post('/account/return-email', { userToken })
+            .then((resEmail) => {
+                if (resEmail.data !== "") {
+                    // alert('이메일 반환 성공!');
+                    return this.email = resEmail.data;
+                }
+            })
+            .catch(() => {
+                alert("통신이 불가합니다")
             })
     },
 }
