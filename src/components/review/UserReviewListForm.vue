@@ -6,8 +6,40 @@
                 <v-card @click="handleCellClick(item)">
                     <!-- <v-img :src="getS3ImageUrl(item.restaurantImagePath)"></v-img> -->
                     <v-card-text>
-                        <div class="star-rating space-x-4 mx-auto">
-                            <div>
+                        <div>
+                            <v-menu offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <div class="menu-icon">
+                                        <v-btn icon v-bind="attrs" v-on="on">
+                                            <v-icon>mdi-dots-vertical</v-icon>
+                                        </v-btn>
+                                    </div>
+                                </template>
+                                <v-list style="width: 100px">
+                                    <v-list-item @click="handleShare(item)">
+                                        <v-list-item-icon>
+                                            <v-icon small>mdi-share</v-icon>
+                                        </v-list-item-icon>
+                                        <v-list-item-content
+                                            style="font-size: 13px; margin-left: -20px;">공유</v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item @click="handleModify(item)">
+                                        <v-list-item-icon>
+                                            <v-icon small>mdi-pencil</v-icon>
+                                        </v-list-item-icon>
+                                        <v-list-item-content
+                                            style="font-size: 13px; margin-left: -20px;">수정</v-list-item-content>
+                                    </v-list-item>
+                                    <v-list-item @click="handleDelete(item)">
+                                        <v-list-item-icon>
+                                            <v-icon small>mdi-delete</v-icon>
+                                        </v-list-item-icon>
+                                        <v-list-item-content
+                                            style="font-size: 13px; margin-left: -20px;">삭제</v-list-item-content>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                            <div class="star-rating space-x-4 mx-auto">
                                 <label v-for="star in 5" :key="star" class="star"
                                     :style="{ color: star <= item.ratings ? 'gold' : 'white' }">★</label>
                             </div>
@@ -16,6 +48,13 @@
                         <p></p>
                         <div>{{ item.comment }}</div>
                     </v-card-text>
+
+                    <!-- <div v-else>
+                        <v-card-actions>
+                            <v-btn @click="handleShare(item)">공유</v-btn>
+                            <v-btn @click="handleReport(item)">신고</v-btn>
+                        </v-card-actions>
+                    </div> -->
                 </v-card>
             </v-flex>
         </v-layout>
@@ -23,7 +62,7 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapState } from 'vuex';
 // import env from '@/env'
 
 const reviewModule = 'reviewModule'
@@ -71,5 +110,10 @@ export default {
     /* -webkit-text-fill-color: transparent; */
     -webkit-text-stroke-width: 1.5px;
     -webkit-text-stroke-color: #2b2a29;
+}
+
+.menu-icon {
+    position: absolute;
+    right: 0;
 }
 </style>
