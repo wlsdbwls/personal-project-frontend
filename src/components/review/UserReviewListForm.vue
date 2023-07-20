@@ -15,27 +15,27 @@
                                         </v-btn>
                                     </div>
                                 </template>
-                                <v-list style="width: 100px">
-                                    <v-list-item @click="handleShare(item)">
+                                <v-list style="width: 85px; height: 122px;">
+                                    <v-list-item style="margin-top: -10px;" @click="handleShare(item)">
                                         <v-list-item-icon>
                                             <v-icon small>mdi-share</v-icon>
                                         </v-list-item-icon>
                                         <v-list-item-content
-                                            style="font-size: 13px; margin-left: -20px;">공유</v-list-item-content>
+                                            style="font-size: 13px; margin-left: -30px;">공유</v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item @click="handleModify(item)">
+                                    <v-list-item style="margin-top: -10px;" @click="openModifyDialog()">
                                         <v-list-item-icon>
                                             <v-icon small>mdi-pencil</v-icon>
                                         </v-list-item-icon>
                                         <v-list-item-content
-                                            style="font-size: 13px; margin-left: -20px;">수정</v-list-item-content>
+                                            style="font-size: 13px; margin-left: -30px;">수정</v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item @click="handleDelete(item)">
+                                    <v-list-item style="margin-top: -10px;" @click="handleDelete(item)">
                                         <v-list-item-icon>
                                             <v-icon small>mdi-delete</v-icon>
                                         </v-list-item-icon>
                                         <v-list-item-content
-                                            style="font-size: 13px; margin-left: -20px;">삭제</v-list-item-content>
+                                            style="font-size: 13px; margin-left: -30px;">삭제</v-list-item-content>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -58,6 +58,22 @@
                 </v-card>
             </v-flex>
         </v-layout>
+
+        <!-- 수정용 팝업 -->
+        <v-dialog v-model="showModifyDialog" max-width="800px">
+            <v-card>
+                <v-card-title style="justify-content: center;">
+                    <div class="headline">후기 수정 팝업</div>
+                </v-card-title>
+                <v-card-text>
+                    <user-review-modify-form :reviewId="selectedReviewId" />
+                </v-card-text>
+                <v-card-actions style="justify-content: center;">
+                    <v-btn @click="closeModifyDialog">저장</v-btn>
+                    <v-btn @click="cancleModify">취소</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
@@ -65,19 +81,27 @@
 import { mapState } from 'vuex';
 // import env from '@/env'
 
+import UserRevieModifyForm from '@/components/review/UserRevieModifyForm.vue'
+
 const reviewModule = 'reviewModule'
 
 export default {
+    components: {
+        UserRevieModifyForm,
+    },
+
     data() {
         return {
             id: null,
+            showModifyDialog: false,
+            selectedReviewId: null,
         }
     },
 
     methods: {
         handleCellClick(item) {
             this.id = item.id // id 값을 설정
-            this.$router.push({ name: 'UserReviewReadPage', params: { id: item.id } })
+            // this.$router.push({ name: 'UserReviewReadPage', params: { id: item.id } })
             console.log(this.id) // 설정된 id 값 확인
         },
 
@@ -86,7 +110,15 @@ export default {
         //     const bucketName = env.api.MAIN_AWS_BUCKET_NAME
 
         //     return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
-        // }
+        // },
+
+        openModifyDialog() {
+            // actions 추가할 것
+            this.showModifyDialog = true;
+        },
+        closeModifyDialog() {
+            this.showModifyDialog = false;
+        },
     },
 
     computed: {
