@@ -66,10 +66,7 @@
                     <div class="headline">후기 수정 팝업</div>
                 </v-card-title>
                 <v-card-text>
-                    <template v-if="selectedReview">
-                        <user-review-modify-form :review="selectedReview" :ratings="selectedReview.ratings"
-                            :comment="selectedReview.comment" @submit="onSubmit" />
-                    </template>
+                    <user-review-modify-form v-if="review" :review="review" @submit="onSubmit" />
                 </v-card-text>
                 <v-card-actions style="justify-content: center;">
                     <v-btn @click="cancelModify">취소</v-btn>
@@ -91,6 +88,13 @@ import UserReviewModifyForm from '@/components/review/UserReviewModifyForm.vue'
 const reviewModule = 'reviewModule'
 
 export default {
+    props: {
+        review: {
+            type: Object,
+            required: true,
+        }
+    },
+
     components: {
         UserReviewModifyForm,
     },
@@ -99,18 +103,14 @@ export default {
         return {
             id: null,
             showModifyDialog: false,
-            selectedReview: null, // 선택한 리뷰 데이터를 담을 객체 추가
             userToken: '',
         }
     },
 
     methods: {
-        ...mapActions(reviewModule, [
-            "requestModifyReviewToSpring",
-        ]),
-        ...mapActions(reviewModule, [
-            "requestReviewToSpring",
-        ]),
+        ...mapActions(reviewModule, ["requestModifyReviewToSpring",]),
+        ...mapActions(reviewModule, ["requestReviewToSpring",]),
+        ...mapActions(reviewModule, ["requestDeleteReviewToSpring",]),
 
         handleCellClick(item) {
             this.id = item.id
@@ -125,10 +125,11 @@ export default {
         // },
 
         async openModifyDialog(item) {
-            this.selectedReview = item.id // 선택한 리뷰 데이터 설정
 
             this.showModifyDialog = true
-            await this.requestReviewToSpring(this.selectedReview);
+            this.id = item.id
+
+            await this.requestReviewToSpring(this.id);
         },
 
         cancelModify() {
@@ -140,10 +141,16 @@ export default {
             await this.requestModifyReviewToSpring(payload)
             this.showModifyDialog = false
         },
+
+        async handleDelete(item) {
+            this.id = item.id;
+            await this.requestDeleteReviewToSpring(this.id);
+        }
     },
 
     computed: {
         ...mapState(reviewModule, ['reviews']),
+        ...mapState(reviewModule, ['review']),
         Reviews() {
             return this.reviews
         }
