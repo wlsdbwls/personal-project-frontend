@@ -34,14 +34,16 @@ export default {
             })
     },
     requestModifyReviewToSpring({ }, payload) {
-        const { id, userToken, modifiedComment, modifiedRatings } = payload
+        const { id, userToken, comment, ratings } = payload
 
-        return axiosInst.springAxiosInst.put(`/review/${id}`, { id, userToken, modifiedComment, modifiedRatings })
+        return axiosInst.springAxiosInst.put(`/review/${id}`, { id, userToken, comment, ratings })
             .then((resReviewModify) => {
                 if (resReviewModify.data) {
-                    console.log("수정 잘 되는지 확인: " + JSON.stringify(resReviewModify.data));
+                    console.log("수정 잘 되는지 확인: " + JSON.stringify(resReviewModify.data))
                     alert("후기가 수정되었습니다.");
-                    return resReviewModify.data;
+                    location.reload()
+
+                    return resReviewModify.data
                 }
             })
             .catch(() => {
@@ -51,8 +53,9 @@ export default {
     requestReviewToSpring({ commit }, id) {
         return axiosInst.springAxiosInst.get(`/review/${id}`)
             .then((resReviewRead) => {
-                console.log("후기 잘 읽는지 확인: " + JSON.stringify(resReviewRead.data));
-                commit(REQUEST_REVIEW_TO_SPRING, resReviewRead.data);
+                console.log("후기 잘 읽는지 확인: " + JSON.stringify(resReviewRead.data))
+                commit(REQUEST_REVIEW_TO_SPRING, resReviewRead.data)
+                return resReviewRead.data
             })
             .catch(() => {
                 alert("후기 read 통신 실패!");
@@ -65,7 +68,7 @@ export default {
                 location.reload()
             })
             .catch(() => {
-                alert("후기 삭제 실패!");
+                alert("후기 삭제 실패!")
             });
     },
 }

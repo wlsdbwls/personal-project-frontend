@@ -9,7 +9,7 @@
     </template>
     <v-container fluid>
       <v-row justify="center">
-        <user-review-list-form :restaurantName="restaurant.restaurantName" @reviewSelected="handleReviewSelected" />
+        <user-review-list-form :restaurantName="restaurant.restaurantName" :review="review" />
         <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
       </v-row>
       <v-col justify="center">
@@ -54,18 +54,16 @@ export default {
   computed: {
     ...mapState(restaurantModule, ["restaurant"]),
     ...mapState(reviewModule, ["review"]),
+
+    handleReviewData() {
+      return this.review
+    },
   },
   methods: {
-    ...mapActions(restaurantModule, [
-      "requestRestaurantToSpring",
-    ]),
-    ...mapActions(reviewModule, [
-      "requestReviewRegisterToSpring",
-    ]),
+    ...mapActions(restaurantModule, ["requestRestaurantToSpring",]),
+    ...mapActions(reviewModule, ["requestReviewRegisterToSpring",]),
     ...mapActions(reviewModule, ['requestReviewListToSpring']),
-    ...mapActions(reviewModule, [
-      "requestReviewToSpring",
-    ]),
+    ...mapActions(reviewModule, ["requestReviewToSpring",]),
 
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");
@@ -77,11 +75,6 @@ export default {
       // Todo: 후기 작성 후 초기화
       // this.$refs.userReviewForm.comment = "";
       // this.$refs.userReviewForm.ratings = "";
-    },
-
-    handleReviewSelected(reviewData) {
-      // UserReviewListForm에서 선택한 리뷰 데이터를 받아옴
-      this.review = reviewData;
     },
   },
 

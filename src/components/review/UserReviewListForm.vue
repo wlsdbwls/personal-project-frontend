@@ -39,7 +39,7 @@
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
-                            <div class="star-rating space-x-4 mx-auto">
+                            <div class="list-star-rating space-x-4 mx-auto">
                                 <label v-for="star in 5" :key="star" class="star"
                                     :style="{ color: star <= item.ratings ? 'gold' : 'white' }">★</label>
                             </div>
@@ -66,7 +66,7 @@
                     <div class="headline">후기 수정 팝업</div>
                 </v-card-title>
                 <v-card-text>
-                    <user-review-modify-form v-if="review" :review="review" @submit="onSubmit" />
+                    <user-review-modify-form v-if="showModifyDialog" :review="modifiedReview" @submit="submitReview" />
                 </v-card-text>
                 <v-card-actions style="justify-content: center;">
                     <v-btn @click="cancelModify">취소</v-btn>
@@ -88,13 +88,6 @@ import UserReviewModifyForm from '@/components/review/UserReviewModifyForm.vue'
 const reviewModule = 'reviewModule'
 
 export default {
-    props: {
-        review: {
-            type: Object,
-            required: true,
-        }
-    },
-
     components: {
         UserReviewModifyForm,
     },
@@ -104,6 +97,8 @@ export default {
             id: null,
             showModifyDialog: false,
             userToken: '',
+            registeredReview: null,
+            modifiedReview: null
         }
     },
 
@@ -125,18 +120,17 @@ export default {
         // },
 
         async openModifyDialog(item) {
+            this.id = item.id;
+            this.registeredReview = await this.requestReviewToSpring(this.id);
 
-            this.showModifyDialog = true
-            this.id = item.id
-
-            await this.requestReviewToSpring(this.id);
+            this.showModifyDialog = true;
         },
 
         cancelModify() {
             this.showModifyDialog = false
         },
 
-        async onSubmit(payload) {
+        async submitReview(payload) {
 
             await this.requestModifyReviewToSpring(payload)
             this.showModifyDialog = false
@@ -144,7 +138,7 @@ export default {
 
         async handleDelete(item) {
             this.id = item.id;
-            await this.requestDeleteReviewToSpring(this.id);
+            this.modifiedReview = await this.requestDeleteReviewToSpring(this.id);
         }
     },
 
@@ -162,15 +156,15 @@ export default {
 }
 </script>
 
-<style scoped>
-.star-rating {
+<style >
+.list-star-rating {
     display: flex;
     font-size: 1.5rem;
     line-height: 2.5rem;
     width: 5em;
 }
 
-.star-rating label {
+.list-star-rating label {
     /* -webkit-text-fill-color: transparent; */
     -webkit-text-stroke-width: 1.5px;
     -webkit-text-stroke-color: #2b2a29;
