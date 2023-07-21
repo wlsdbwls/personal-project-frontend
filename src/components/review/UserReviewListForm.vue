@@ -23,7 +23,7 @@
                                         <v-list-item-content
                                             style="font-size: 13px; margin-left: -30px;">공유</v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item style="margin-top: -10px;" @click="openModifyDialog()">
+                                    <v-list-item style="margin-top: -10px;" @click="openModifyDialog(item)">
                                         <v-list-item-icon>
                                             <v-icon small>mdi-pencil</v-icon>
                                         </v-list-item-icon>
@@ -66,43 +66,55 @@
                     <div class="headline">후기 수정 팝업</div>
                 </v-card-title>
                 <v-card-text>
-                    <user-review-modify-form :reviewId="selectedReviewId" />
+                    <template v-if="selectedReview">
+                        <user-review-modify-form :review="selectedReview" :ratings="selectedReview.ratings"
+                            :comment="selectedReview.comment" @submit="onSubmit" />
+                    </template>
                 </v-card-text>
                 <v-card-actions style="justify-content: center;">
-                    <v-btn @click="closeModifyDialog">저장</v-btn>
-                    <v-btn @click="cancleModify">취소</v-btn>
+                    <v-btn @click="cancelModify">취소</v-btn>
                 </v-card-actions>
+
             </v-card>
+
         </v-dialog>
+
     </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex'
 // import env from '@/env'
 
-import UserRevieModifyForm from '@/components/review/UserRevieModifyForm.vue'
+import UserReviewModifyForm from '@/components/review/UserReviewModifyForm.vue'
 
 const reviewModule = 'reviewModule'
 
 export default {
     components: {
-        UserRevieModifyForm,
+        UserReviewModifyForm,
     },
 
     data() {
         return {
             id: null,
             showModifyDialog: false,
-            selectedReviewId: null,
+            selectedReview: null, // 선택한 리뷰 데이터를 담을 객체 추가
+            userToken: '',
         }
     },
 
     methods: {
+        ...mapActions(reviewModule, [
+            "requestModifyReviewToSpring",
+        ]),
+        ...mapActions(reviewModule, [
+            "requestReviewToSpring",
+        ]),
+
         handleCellClick(item) {
-            this.id = item.id // id 값을 설정
-            // this.$router.push({ name: 'UserReviewReadPage', params: { id: item.id } })
-            console.log(this.id) // 설정된 id 값 확인
+            this.id = item.id
+            console.log(this.id)
         },
 
         // getS3ImageUrl(imageKey) {
@@ -112,12 +124,21 @@ export default {
         //     return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
         // },
 
-        openModifyDialog() {
-            // actions 추가할 것
-            this.showModifyDialog = true;
+        async openModifyDialog(item) {
+            this.selectedReview = item.id // 선택한 리뷰 데이터 설정
+
+            this.showModifyDialog = true
+            await this.requestReviewToSpring(this.selectedReview);
         },
-        closeModifyDialog() {
-            this.showModifyDialog = false;
+
+        cancelModify() {
+            this.showModifyDialog = false
+        },
+
+        async onSubmit(payload) {
+
+            await this.requestModifyReviewToSpring(payload)
+            this.showModifyDialog = false
         },
     },
 
@@ -126,8 +147,12 @@ export default {
         Reviews() {
             return this.reviews
         }
-    }
-};
+    },
+
+    created() {
+        this.userToken = localStorage.getItem("userToken")
+    },
+}
 </script>
 
 <style scoped>

@@ -1,4 +1,5 @@
 export default {
-  reviews: []
+  reviews: [],
+  review: {}
 };
 

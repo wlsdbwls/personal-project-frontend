@@ -9,7 +9,7 @@
     </template>
     <v-container fluid>
       <v-row justify="center">
-        <user-review-list-form :restaurantName="restaurant.restaurantName" />
+        <user-review-list-form :restaurantName="restaurant.restaurantName" @reviewSelected="handleReviewSelected" />
         <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
       </v-row>
       <v-col justify="center">
@@ -45,36 +45,49 @@ export default {
     UserReviewListForm,
   },
 
+  data() {
+    return {
+      // review: null,
+    }
+  },
+
   computed: {
     ...mapState(restaurantModule, ["restaurant"]),
-    // ...mapState(reviewModule, ["review"]),
+    ...mapState(reviewModule, ["review"]),
   },
   methods: {
     ...mapActions(restaurantModule, [
       "requestRestaurantToSpring",
     ]),
     ...mapActions(reviewModule, [
-      "requestReviewToSpring",
+      "requestReviewRegisterToSpring",
     ]),
     ...mapActions(reviewModule, ['requestReviewListToSpring']),
+    ...mapActions(reviewModule, [
+      "requestReviewToSpring",
+    ]),
 
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");
     },
 
     async submitReview(payload) {
-      await this.requestReviewToSpring(payload)
+      await this.requestReviewRegisterToSpring(payload)
 
       // Todo: 후기 작성 후 초기화
       // this.$refs.userReviewForm.comment = "";
       // this.$refs.userReviewForm.ratings = "";
+    },
+
+    handleReviewSelected(reviewData) {
+      // UserReviewListForm에서 선택한 리뷰 데이터를 받아옴
+      this.review = reviewData;
     },
   },
 
   async created() {
     await this.requestRestaurantToSpring(this.id)
     await this.requestReviewListToSpring({ restaurantName: this.restaurant.restaurantName });
-
   }
 }
 </script>
