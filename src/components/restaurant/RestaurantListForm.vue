@@ -42,7 +42,6 @@ export default {
             searchTerm: '',
             id: null,
             likedRestaurants: [],
-            accountId: null
         }
     },
 
@@ -58,47 +57,48 @@ export default {
             console.log(this.id)
         },
 
-        // 음식점이 찜되었는지 확인
-        // isLiked(restaurantId) {
-        //     return this.likedRestaurants.includes(restaurantId);
-        // },
-
         isLiked(restaurantId) {
             const accountId = localStorage.getItem('accountId');
             this.likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
             return Array.isArray(this.likedRestaurants) && this.likedRestaurants.includes(restaurantId);
         },
 
-        // async toggleLike(restaurantId) {
-        //     if (this.isLiked(restaurantId)) {
-        //         await this.requestUnlikeRestaurantToSpring(restaurantId)
-        //     } else {
-        //         this.likedRestaurants.push(restaurantId);
-        //         const accountId = localStorage.getItem('accountId')
-        //         localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(this.likedRestaurants))
-        //         await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
-        //     }
-        // },
-
         async toggleLike(restaurantId) {
             if (this.isLiked(restaurantId)) {
-                await this.requestUnlikeRestaurantToSpring(restaurantId)
+                await this.requestUnlikeRestaurantToSpring(restaurantId);
 
                 // 로컬 스토리지에서 해당 restaurantId 제거
-                const accountId = localStorage.getItem('accountId');
-                const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || []
-                const updatedLikedRestaurants = likedRestaurants.filter((id) => id !== restaurantId)
-                localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(updatedLikedRestaurants))
+                const likedRestaurants = this.getLikedRestaurants();
+                const updatedLikedRestaurants = likedRestaurants.filter((id) => id !== restaurantId);
+                this.saveLikedRestaurants(updatedLikedRestaurants);
+
+                // 아이콘 변경된 후 로컬 스토리지와 Vue 컴포넌트 데이터 동기화
+                this.likedRestaurants = updatedLikedRestaurants;
 
             } else {
-                await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
+                await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId });
 
                 // 로컬 스토리지에 해당 restaurantId 추가
-                const accountId = localStorage.getItem('accountId')
-                const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || []
-                likedRestaurants.push(restaurantId)
-                localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(likedRestaurants))
+                const likedRestaurants = this.getLikedRestaurants();
+                likedRestaurants.push(restaurantId);
+                this.saveLikedRestaurants(likedRestaurants);
+
+                // 아이콘 변경된 후 로컬 스토리지와 Vue 컴포넌트 데이터 동기화
+                this.likedRestaurants = likedRestaurants;
             }
+        },
+
+        // 로컬 스토리지에서 해당 사용자의 likedRestaurants 가져오기
+        getLikedRestaurants() {
+            const accountId = localStorage.getItem('accountId')
+            const likedRestaurants = localStorage.getItem(`likedRestaurants_${accountId}`);
+            return likedRestaurants ? JSON.parse(likedRestaurants) : [];
+        },
+
+        // 로컬 스토리지에 해당 사용자의 likedRestaurants 저장하기
+        saveLikedRestaurants(likedRestaurants) {
+            const accountId = localStorage.getItem('accountId')
+            localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(likedRestaurants));
         },
 
         getS3ImageUrl(imageKey) {
@@ -112,7 +112,7 @@ export default {
         await this.requestRestaurantListToSpring()
 
         this.userToken = localStorage.getItem('userToken')
-        await this.requestAccountIdToSpring({ userToken: this.userToken })
+        const accountId = await this.requestAccountIdToSpring({ userToken: this.userToken })
     },
     computed: {
         ...mapState(restaurantModule, ['restaurants']),
