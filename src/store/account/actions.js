@@ -81,4 +81,18 @@ export default {
                 alert("통신이 불가합니다")
             })
     },
+    requestAccountIdToSpring({ }, payload) {
+        const { userToken } = payload
+
+        return axiosInst.springAxiosInst.post('/account/return-accountId', { userToken })
+            .then((resAccountId) => {
+                if (resAccountId.data !== "") {
+                    console.log('accountId: ' + resAccountId.data)
+                    return localStorage.setItem("accountId", resAccountId.data);
+                }
+            })
+            .catch(() => {
+                alert("통신이 불가합니다")
+            })
+    },
 }

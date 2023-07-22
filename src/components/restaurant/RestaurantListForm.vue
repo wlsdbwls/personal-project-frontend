@@ -33,6 +33,7 @@ import env from '@/env'
 
 const restaurantModule = 'restaurantModule'
 const likeModule = 'likeModule'
+const accountModule = 'accountModule'
 
 export default {
     data() {
@@ -40,12 +41,14 @@ export default {
             userToken: '',
             searchTerm: '',
             id: null,
-            likedRestaurants: []
+            likedRestaurants: [],
+            accountId: null
         }
     },
 
     methods: {
         ...mapActions(restaurantModule, ['requestRestaurantListToSpring']),
+        ...mapActions(accountModule, ['requestAccountIdToSpring']),
         ...mapActions(likeModule, ['requestLikeRestaurantToSpring',
             'requestUnlikeRestaurantToSpring']),
 
@@ -56,18 +59,45 @@ export default {
         },
 
         // 음식점이 찜되었는지 확인
+        // isLiked(restaurantId) {
+        //     return this.likedRestaurants.includes(restaurantId);
+        // },
+
         isLiked(restaurantId) {
-            return this.likedRestaurants.includes(restaurantId);
+            const accountId = localStorage.getItem('accountId');
+            this.likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
+            return Array.isArray(this.likedRestaurants) && this.likedRestaurants.includes(restaurantId);
         },
+
+        // async toggleLike(restaurantId) {
+        //     if (this.isLiked(restaurantId)) {
+        //         await this.requestUnlikeRestaurantToSpring(restaurantId)
+        //     } else {
+        //         this.likedRestaurants.push(restaurantId);
+        //         const accountId = localStorage.getItem('accountId')
+        //         localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(this.likedRestaurants))
+        //         await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
+        //     }
+        // },
 
         async toggleLike(restaurantId) {
             if (this.isLiked(restaurantId)) {
                 await this.requestUnlikeRestaurantToSpring(restaurantId)
-                this.likedRestaurants = this.likedRestaurants.filter((id) => id !== restaurantId);
+
+                // 로컬 스토리지에서 해당 restaurantId 제거
+                const accountId = localStorage.getItem('accountId');
+                const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || []
+                const updatedLikedRestaurants = likedRestaurants.filter((id) => id !== restaurantId)
+                localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(updatedLikedRestaurants))
 
             } else {
-                this.likedRestaurants.push(restaurantId)
                 await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
+
+                // 로컬 스토리지에 해당 restaurantId 추가
+                const accountId = localStorage.getItem('accountId')
+                const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || []
+                likedRestaurants.push(restaurantId)
+                localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(likedRestaurants))
             }
         },
 
@@ -75,12 +105,14 @@ export default {
             const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
             const bucketName = env.api.MAIN_AWS_BUCKET_NAME
 
-            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
+            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`
         }
     },
-    mounted() {
-        this.requestRestaurantListToSpring()
+    async mounted() {
+        await this.requestRestaurantListToSpring()
+
         this.userToken = localStorage.getItem('userToken')
+        await this.requestAccountIdToSpring({ userToken: this.userToken })
     },
     computed: {
         ...mapState(restaurantModule, ['restaurants']),
