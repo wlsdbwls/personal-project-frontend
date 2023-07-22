@@ -28,10 +28,11 @@
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { mapActions, mapState } from 'vuex'
 import env from '@/env'
 
-const restaurantModule = 'restaurantModule';
+const restaurantModule = 'restaurantModule'
+const likeModule = 'likeModule'
 
 export default {
     data() {
@@ -39,33 +40,35 @@ export default {
             userToken: '',
             searchTerm: '',
             id: null,
-            likedRestaurants: [] // 찜한 음식점의 ID를 저장하는 배열
-        };
+            likedRestaurants: []
+        }
     },
+
     methods: {
         ...mapActions(restaurantModule, ['requestRestaurantListToSpring']),
+        ...mapActions(likeModule, ['requestLikeRestaurantToSpring',
+            'requestUnlikeRestaurantToSpring']),
+
         handleCellClick(item) {
-            this.id = item.id; // id 값을 설정
+            this.id = item.id
             this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } });
-            console.log(this.id); // 설정된 id 값 확인
+            console.log(this.id)
         },
+
         // 음식점이 찜되었는지 확인
         isLiked(restaurantId) {
             return this.likedRestaurants.includes(restaurantId);
         },
 
-        toggleLike(restaurantId) {
+        async toggleLike(restaurantId) {
             if (this.isLiked(restaurantId)) {
-                // 이미 찜되어 있으면 likedRestaurants 배열에서 제거
-                const index = this.likedRestaurants.indexOf(restaurantId);
-                this.likedRestaurants.splice(index, 1);
-            } else {
-                // 찜되어 있지 않으면 likedRestaurants 배열에 추가
-                this.likedRestaurants.push(restaurantId);
-            }
+                await this.requestUnlikeRestaurantToSpring(restaurantId)
+                this.likedRestaurants = this.likedRestaurants.filter((id) => id !== restaurantId);
 
-            // localStorage에 찜한 음식점 ID 저장
-            localStorage.setItem('likedRestaurants', JSON.stringify(this.likedRestaurants));
+            } else {
+                this.likedRestaurants.push(restaurantId)
+                await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
+            }
         },
 
         getS3ImageUrl(imageKey) {
@@ -76,14 +79,8 @@ export default {
         }
     },
     mounted() {
-        this.requestRestaurantListToSpring();
-        this.userToken = localStorage.getItem('userToken');
-
-        // localStorage에서 찜한 음식점 ID 불러오기
-        const likedRestaurantsData = localStorage.getItem('likedRestaurants');
-        if (likedRestaurantsData) {
-            this.likedRestaurants = JSON.parse(likedRestaurantsData);
-        }
+        this.requestRestaurantListToSpring()
+        this.userToken = localStorage.getItem('userToken')
     },
     computed: {
         ...mapState(restaurantModule, ['restaurants']),
