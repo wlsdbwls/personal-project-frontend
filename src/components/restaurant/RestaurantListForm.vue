@@ -18,7 +18,10 @@
                             <template v-else>
                                 <v-icon class="mdi mdi-heart-outline" @click.stop="toggleLike(item.id)"></v-icon>
                             </template>
-                            <v-icon small class="px-2">후기</v-icon><span>0</span>
+                            <div class="star-rating">
+                                <label class="star" style="color: gold;">★ </label>
+                                <span style="font-size: 15px; color: #6E6E6E;">{{ getAverageRatings(item.id) }}</span>
+                            </div>
                         </v-card-actions>
                     </v-card>
                 </v-flex>
@@ -38,6 +41,7 @@ import env from '@/env'
 const restaurantModule = 'restaurantModule'
 const likeModule = 'likeModule'
 const accountModule = 'accountModule'
+const reviewModule = 'reviewModule'
 
 export default {
     data() {
@@ -46,6 +50,7 @@ export default {
             searchTerm: '',
             id: null,
             likedRestaurants: [],
+            restaurantAverageRatings: {},
         }
     },
 
@@ -54,71 +59,83 @@ export default {
         ...mapActions(accountModule, ['requestAccountIdToSpring']),
         ...mapActions(likeModule, ['requestLikeRestaurantToSpring',
             'requestUnlikeRestaurantToSpring']),
+        ...mapActions(reviewModule, ['requestAverageRatingsToSpring']),
 
-        handleCellClick(item) {
+        // 게시물 클릭
+        async handleCellClick(item) {
             this.id = item.id
-            this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } });
+            await this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } });
             console.log('restaurantId: ' + this.id)
         },
 
-
-        // isLiked(restaurantId) {
-        //     const accountId = localStorage.getItem('accountId');
-        //     this.likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
-        //     return Array.isArray(this.likedRestaurants) && this.likedRestaurants.includes(restaurantId);
-        // },
-
+        // 찜 기능
         async toggleLike(restaurantId) {
             if (this.isLiked(restaurantId)) {
                 await this.requestUnlikeRestaurantToSpring(restaurantId);
 
-                // 로컬 스토리지에서 해당 restaurantId 제거
                 const likedRestaurants = this.getLikedRestaurants();
                 const updatedLikedRestaurants = likedRestaurants.filter((id) => id !== restaurantId);
                 this.saveLikedRestaurants(updatedLikedRestaurants);
 
-                // 아이콘 변경된 후 로컬 스토리지와 Vue 컴포넌트 데이터 동기화
                 this.likedRestaurants = updatedLikedRestaurants;
 
             } else {
                 await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId });
 
-                // 로컬 스토리지에 해당 restaurantId 추가
                 const likedRestaurants = this.getLikedRestaurants();
                 likedRestaurants.push(restaurantId);
                 this.saveLikedRestaurants(likedRestaurants);
 
-                // 아이콘 변경된 후 로컬 스토리지와 Vue 컴포넌트 데이터 동기화
                 this.likedRestaurants = likedRestaurants;
             }
         },
 
-        // 로컬 스토리지에서 해당 사용자의 likedRestaurants 가져오기
         getLikedRestaurants() {
             const accountId = localStorage.getItem('accountId')
-            const likedRestaurants = localStorage.getItem(`likedRestaurants_${accountId}`);
+            const likedRestaurants = localStorage.getItem(`likedRestaurants_${accountId}`)
             return likedRestaurants ? JSON.parse(likedRestaurants) : [];
         },
 
-        // 로컬 스토리지에 해당 사용자의 likedRestaurants 저장하기
         saveLikedRestaurants(likedRestaurants) {
             const accountId = localStorage.getItem('accountId')
             localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(likedRestaurants));
         },
 
+        // 이미지 가져오기
         getS3ImageUrl(imageKey) {
             const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
             const bucketName = env.api.MAIN_AWS_BUCKET_NAME
 
             return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`
-        }
+        },
+
+        // 평균 평점 가져오기
+        async fetchAverageRatings() {
+            for (const restaurant of this.restaurants) {
+                const restaurantId = restaurant.id
+                const averageRatings = await this.requestAverageRatingsToSpring(restaurantId)
+                this.setAverageRatings(restaurantId, averageRatings)
+            }
+        },
+
+        setAverageRatings(restaurantId, averageRatings) {
+            this.$set(this.restaurantAverageRatings, restaurantId, averageRatings);
+        },
+
+        getAverageRatings(restaurantId) {
+            return this.restaurantAverageRatings[restaurantId] || 0
+        },
     },
+
     async mounted() {
         await this.requestRestaurantListToSpring()
 
         this.userToken = localStorage.getItem('userToken')
-        const accountId = await this.requestAccountIdToSpring({ userToken: this.userToken })
+        await this.requestAccountIdToSpring({ userToken: this.userToken })
+
+        await this.fetchAverageRatings()
     },
+
     computed: {
         ...mapState(restaurantModule, ['restaurants']),
         findRestaurant() {
@@ -139,4 +156,15 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.star-rating {
+    margin-right: -20px;
+    font-size: 1.2rem;
+    width: 5em;
+    margin-top: -2px;
+}
+
+.star-rating label {
+    -webkit-text-stroke-width: 1.5px;
+}
+</style>

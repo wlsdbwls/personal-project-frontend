@@ -71,4 +71,14 @@ export default {
                 alert("후기 삭제 실패!")
             });
     },
+    requestAverageRatingsToSpring({ }, restaurantId) {
+        return axiosInst.springAxiosInst.post("/review/average-ratings", { restaurantId })
+            .then((resAverageRatings) => {
+                console.log('restaurantId:', restaurantId, '평균 별점:', resAverageRatings.data)
+                return resAverageRatings.data
+            })
+            .catch((error) => {
+                alert('평균 평점 통신 에러 발생!')
+            })
+    },
 }
