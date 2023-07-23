@@ -15,8 +15,12 @@
           </v-card-text>
           <v-divider />
           <v-card-actions class="justify-center">
-            <v-icon :class="isLiked(restaurant.id) ? 'mdi mdi-heart red--text' : 'mdi mdi-heart-outline'"
-              @click.stop="toggleLike(restaurant.id)"></v-icon>
+            <template v-if="isLiked(restaurant.id)">
+              <v-icon class="mdi mdi-heart red--text" @click="toggleLike(restaurant.id)"></v-icon>
+            </template>
+            <template v-else>
+              <v-icon class="mdi mdi-heart-outline" @click="toggleLike(restaurant.id)"></v-icon>
+            </template>
           </v-card-actions>
         </v-card>
       </v-flex>
@@ -26,6 +30,10 @@
 
 <script>
 import env from '@/env'
+import { mapActions } from 'vuex'
+
+const likeModule = 'likeModule'
+const accountModule = 'accountModule'
 
 export default {
   name: "RestaurantReadForm",
@@ -39,35 +47,46 @@ export default {
   data() {
     return {
       likedRestaurants: [],
-    };
-  },
-
-  mounted() {
-    // 로컬 스토리지에서 찜한 음식점 목록 가져오기
-    const userLikedRestaurants = localStorage.getItem('likedRestaurants');
-    if (userLikedRestaurants) {
-      this.likedRestaurants = JSON.parse(userLikedRestaurants);
     }
   },
 
   methods: {
-    // 음식점이 찜되었는지 확인
-    isLiked(restaurantId) {
-      return this.likedRestaurants.includes(restaurantId);
+    ...mapActions(accountModule, ['requestAccountIdToSpring']),
+    ...mapActions(likeModule, ['requestLikeRestaurantToSpring',
+      'requestUnlikeRestaurantToSpring']),
+
+
+
+    async toggleLike(restaurantId) {
+      if (this.isLiked(restaurantId)) {
+        await this.requestUnlikeRestaurantToSpring(restaurantId)
+
+        const likedRestaurants = this.getLikedRestaurants()
+        const updatedLikedRestaurants = likedRestaurants.filter((id) => id !== restaurantId)
+        this.saveLikedRestaurants(updatedLikedRestaurants)
+
+        this.likedRestaurants = updatedLikedRestaurants
+
+      } else {
+        await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
+
+        const likedRestaurants = this.getLikedRestaurants()
+        likedRestaurants.push(restaurantId)
+        this.saveLikedRestaurants(likedRestaurants)
+
+        this.likedRestaurants = likedRestaurants
+      }
     },
 
-    toggleLike(restaurantId) {
-      if (this.isLiked(restaurantId)) {
-        // 이미 찜되어 있으면 likedRestaurants 배열에서 제거
-        const index = this.likedRestaurants.indexOf(restaurantId);
-        this.likedRestaurants.splice(index, 1);
-      } else {
-        // 찜되어 있지 않으면 likedRestaurants 배열에 추가
-        this.likedRestaurants.push(restaurantId);
-      }
+    getLikedRestaurants() {
+      const accountId = localStorage.getItem('accountId')
+      const likedRestaurants = localStorage.getItem(`likedRestaurants_${accountId}`)
+      return likedRestaurants ? JSON.parse(likedRestaurants) : []
+    },
 
-      // localStorage에 찜한 음식점 ID 저장
-      localStorage.setItem('likedRestaurants', JSON.stringify(this.likedRestaurants));
+    saveLikedRestaurants(likedRestaurants) {
+      const accountId = localStorage.getItem('accountId')
+      localStorage.setItem(`likedRestaurants_${accountId}`, JSON.stringify(likedRestaurants))
     },
 
     getS3ImageUrl(imageKey) {
@@ -77,7 +96,22 @@ export default {
       return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
     }
   },
-};
+
+  mounted() {
+    this.userToken = localStorage.getItem('userToken')
+    this.likedRestaurants = this.getLikedRestaurants()
+  },
+
+  computed: {
+    isLiked() {
+      return (restaurantId) => {
+        const accountId = localStorage.getItem('accountId');
+        const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
+        return Array.isArray(likedRestaurants) && likedRestaurants.includes(restaurantId);
+      }
+    },
+  }
+}
 </script>
 
 <style lang="">

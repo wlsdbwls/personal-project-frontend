@@ -3,19 +3,19 @@
   <h1>맛집 상세 페이지</h1>
     <template v-if="restaurant">
       <restaurant-read-form :restaurant="restaurant" />
+      <v-container fluid>
+        <v-row justify="center">
+          <user-review-list-form :restaurantName="restaurant.restaurantName" :review="review" />
+          <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
+        </v-row>
+        <v-col justify="center">
+          <v-btn class="centered-button" @click="goToRestaurantListPage">목록으로</v-btn>
+        </v-col>      
+      </v-container>
     </template>
     <template v-else>
       <p>로딩중 ...</p>
     </template>
-    <v-container fluid>
-      <v-row justify="center">
-        <user-review-list-form :restaurantName="restaurant.restaurantName" :review="review" />
-        <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
-      </v-row>
-      <v-col justify="center">
-        <v-btn class="centered-button" @click="goToRestaurantListPage">목록으로</v-btn>
-      </v-col>      
-    </v-container>
   </div>
 </template>
 
@@ -55,15 +55,13 @@ export default {
     ...mapState(restaurantModule, ["restaurant"]),
     ...mapState(reviewModule, ["review"]),
 
-    handleReviewData() {
-      return this.review
-    },
+    // handleReviewData() {
+    //   return this.review
+    // },
   },
   methods: {
     ...mapActions(restaurantModule, ["requestRestaurantToSpring",]),
-    ...mapActions(reviewModule, ["requestReviewRegisterToSpring",]),
-    ...mapActions(reviewModule, ['requestReviewListToSpring']),
-    ...mapActions(reviewModule, ["requestReviewToSpring",]),
+    ...mapActions(reviewModule, ["requestReviewRegisterToSpring", 'requestReviewListToSpring', 'requestReviewToSpring']),
 
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");

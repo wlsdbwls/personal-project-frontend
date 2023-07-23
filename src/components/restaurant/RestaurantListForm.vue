@@ -12,8 +12,12 @@
                         <v-divider />
                         <v-card-actions>
                             <v-spacer />
-                            <v-icon :class="isLiked(item.id) ? 'mdi mdi-heart red--text' : 'mdi mdi-heart-outline'"
-                                @click.stop="toggleLike(item.id)"></v-icon>
+                            <template v-if="isLiked(item.id)">
+                                <v-icon class="mdi mdi-heart red--text" @click.stop="toggleLike(item.id)"></v-icon>
+                            </template>
+                            <template v-else>
+                                <v-icon class="mdi mdi-heart-outline" @click.stop="toggleLike(item.id)"></v-icon>
+                            </template>
                             <v-icon small class="px-2">후기</v-icon><span>0</span>
                         </v-card-actions>
                     </v-card>
@@ -54,14 +58,15 @@ export default {
         handleCellClick(item) {
             this.id = item.id
             this.$router.push({ name: 'RestaurantReadPage', params: { id: item.id } });
-            console.log(this.id)
+            console.log('restaurantId: ' + this.id)
         },
 
-        isLiked(restaurantId) {
-            const accountId = localStorage.getItem('accountId');
-            this.likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
-            return Array.isArray(this.likedRestaurants) && this.likedRestaurants.includes(restaurantId);
-        },
+
+        // isLiked(restaurantId) {
+        //     const accountId = localStorage.getItem('accountId');
+        //     this.likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
+        //     return Array.isArray(this.likedRestaurants) && this.likedRestaurants.includes(restaurantId);
+        // },
 
         async toggleLike(restaurantId) {
             if (this.isLiked(restaurantId)) {
@@ -119,11 +124,19 @@ export default {
         findRestaurant() {
             const restaurants = this.restaurants.filter((restaurant) =>
                 restaurant.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
-            );
-            return restaurants;
-        }
+            )
+            return restaurants
+        },
+
+        isLiked() {
+            return (restaurantId) => {
+                const accountId = localStorage.getItem('accountId');
+                const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
+                return Array.isArray(likedRestaurants) && likedRestaurants.includes(restaurantId);
+            }
+        },
     }
-};
+}
 </script>
 
 <style></style>
