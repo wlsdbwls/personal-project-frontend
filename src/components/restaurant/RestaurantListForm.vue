@@ -25,7 +25,7 @@
             </template>
         </v-layout>
         <div>
-            <input type="text" v-model="searchTerm" placeholder="상호명을 입력하세요" />
+            <input type="text" :value="searchTerm" @change="searchTerm = $event.target.value" placeholder="상호명을 입력하세요" />
             <v-btn :small="true" raised @click="findRestaurant">검색</v-btn>
         </div>
     </v-container>

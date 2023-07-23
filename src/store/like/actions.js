@@ -37,5 +37,15 @@ export default {
                 alert('찜 해제 통신이 불가합니다');
             });
     },
+    requestLikesCountToSpring({ }, restaurantId) {
 
+        return axiosInst.springAxiosInst.post("/like/restaurant-count", { restaurantId })
+            .then((resLikesCount) => {
+                console.log('resLikesCount: ' + resLikesCount.data)
+                return resLikesCount.data
+            })
+            .catch(() => {
+                alert('찜 Count 통신이 불가합니다');
+            })
+    },
 }

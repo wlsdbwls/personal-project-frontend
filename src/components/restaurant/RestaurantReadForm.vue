@@ -2,7 +2,7 @@
   <v-container>
     <v-layout column align-center>
       <v-flex>
-        <v-card align="center" height="615px" width="700px">
+        <v-card align="center" height="635px" width="700px">
           <v-carousel>
             <v-carousel-item v-for="(restaurantImagePath, idx) in restaurant.restaurantImagesPathList" :key="idx"
               :width="550" :heigth="550">
@@ -15,13 +15,12 @@
           </v-card-text>
           <v-divider />
           <v-card-actions class="justify-center">
-            <template v-if="isLiked(restaurant.id)">
-              <v-icon class="mdi mdi-heart red--text" @click="toggleLike(restaurant.id)"></v-icon>
-            </template>
-            <template v-else>
-              <v-icon class="mdi mdi-heart-outline" @click="toggleLike(restaurant.id)"></v-icon>
-            </template>
+            <v-icon :class="isLiked(restaurant.id) ? 'mdi mdi-heart red--text' : 'mdi mdi-heart-outline'"
+              @click="toggleLike(restaurant.id)"></v-icon>
           </v-card-actions>
+          <v-layout justify-center style="margin-top: -9px;">
+            <span style="color: #6E6E6E; font-size: small;">{{ likesCount }}</span>
+          </v-layout>
         </v-card>
       </v-flex>
     </v-layout>
@@ -47,15 +46,14 @@ export default {
   data() {
     return {
       likedRestaurants: [],
+      likesCount: 0,
     }
   },
 
   methods: {
     ...mapActions(accountModule, ['requestAccountIdToSpring']),
     ...mapActions(likeModule, ['requestLikeRestaurantToSpring',
-      'requestUnlikeRestaurantToSpring']),
-
-
+      'requestUnlikeRestaurantToSpring', 'requestLikesCountToSpring']),
 
     async toggleLike(restaurantId) {
       if (this.isLiked(restaurantId)) {
@@ -97,17 +95,22 @@ export default {
     }
   },
 
-  mounted() {
+  async mounted() {
     this.userToken = localStorage.getItem('userToken')
-    this.likedRestaurants = this.getLikedRestaurants()
+    this.likedRestaurants = await this.getLikedRestaurants()
+  },
+
+  async updated() {
+    const restaurantId = this.restaurant.id
+    this.likesCount = await this.requestLikesCountToSpring(restaurantId)
   },
 
   computed: {
     isLiked() {
       return (restaurantId) => {
-        const accountId = localStorage.getItem('accountId');
-        const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || [];
-        return Array.isArray(likedRestaurants) && likedRestaurants.includes(restaurantId);
+        const accountId = localStorage.getItem('accountId')
+        const likedRestaurants = JSON.parse(localStorage.getItem(`likedRestaurants_${accountId}`)) || []
+        return Array.isArray(likedRestaurants) && likedRestaurants.includes(restaurantId)
       }
     },
   }
