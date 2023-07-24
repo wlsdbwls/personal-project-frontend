@@ -1,42 +1,73 @@
 <template>
-  <v-app>
-    <navigation-menu-page />
-    <v-main>
-      <router-view />
-    </v-main>
-  </v-app>
+  <div id="app">
+    <div class="container">
+      <navigation-menu-page />
+      <div class="contents">
+        <!-- <Section />          -->
+        <router-view id="router-view" />
+      </div>
+      <Footer />
+    </div>
+  </div>
 </template>
 
-
 <script>
-import NavigationMenuPage from './views/navigation/NavigationMenuPage.vue';
+
+import NavigationMenuPage from './views/layout/NavigationMenuPage.vue'
+import Footer from './views/layout/Footer.vue'
+
 export default {
+  name: 'App',
   components: {
-    NavigationMenuPage
+    NavigationMenuPage,
+    Footer
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+<style lang="css">
+@import './assets/css/common.css';
+
+.container {
+  position: relative;
+  min-height: 100vh;
 }
 
-nav {
-  padding: 30px;
+.contents {
+  padding-bottom: 150px;
 }
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
+footer {
+  position: relative;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  background-color: #f2f2f2;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+.wrap {
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main {
+  margin: 0 auto;
+  margin-top: 50px;
+  margin-bottom: 200px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.main_leftaside {
+  width: 200px;
+}
+
+.main_contents {
+  /* width: 820px; */
 }
 </style>
 
