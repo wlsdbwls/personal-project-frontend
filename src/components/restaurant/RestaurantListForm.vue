@@ -12,12 +12,14 @@
                         <v-divider />
                         <v-card-actions>
                             <v-spacer />
-                            <template v-if="isLiked(item.id)">
-                                <v-icon class="mdi mdi-heart red--text" @click.stop="toggleLike(item.id)"></v-icon>
-                            </template>
-                            <template v-else>
-                                <v-icon class="mdi mdi-heart-outline" @click.stop="toggleLike(item.id)"></v-icon>
-                            </template>
+                            <div justify-center>
+                                <template v-if="isLiked(item.id)">
+                                    <v-icon class="mdi mdi-heart red--text" @click.stop="toggleLike(item.id)"></v-icon>
+                                </template>
+                                <template v-else>
+                                    <v-icon class="mdi mdi-heart-outline" @click.stop="toggleLike(item.id)"></v-icon>
+                                </template>
+                            </div>
                             <div class="star-rating">
                                 <label class="star" style="color: gold;">★ </label>
                                 <span style="font-size: 15px; color: #6E6E6E;">{{ getAverageRatings(item.id) }}</span>
