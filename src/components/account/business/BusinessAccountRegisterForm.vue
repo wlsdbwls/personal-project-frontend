@@ -1,138 +1,218 @@
 <template lang="">
-    <v-container class="signupContainer">
-    <v-card id="signupVcard" justify-center>
-        <h1>BUSINESS JOIN</h1>
-        <div>
-            <v-card-text class="text-center px-12 py-16">
-                <v-form @submit.prevent="onSubmit" ref="form">
-                <table id="signupTable">
-                        <div class="d-flex">
-                            <v-text-field
-                                v-model="email"
-                                label="email을 입력하세요" 
-                                :rules="email_rule"
-                                :disabled="false"
-                                filled
-                                outlined
-                                required>
-                            </v-text-field>
-                            <v-btn text large outlined style="font-size: 13px"
-                                    class="mt-3 ml-1" color="teal lighten-1"
-                                    @click="checkDuplicateEmail">
-                                    이메일 <br/>중복확인
-                            </v-btn>
-                            <!-- 
-                                중복 확인 버튼을 누르면 바로 이메일로 코드를 보냈다고 하고
-                                코드 입력 폼이 나오는 것이 나을 것 같음 
-                                근데 이메일이 입력된 것이 확인되면 넘어가야 함
-                            -->                            
-                        </div>
-                        <!-- <div v-if="checkDuplicateEmail === true">
-                            <email-authentication-form/>
-                        </div> -->
-                        <div class="d-flex">
-                            <v-text-field
-                                v-model="businessNumber"
-                                label="사업자 번호를 입력하세요" 
-                                :rules="businessNumber_rule"
-                                :disabled="false"
-                                filled
-                                outlined
-                                required>
-                            </v-text-field>
-                            <v-btn text large outlined style="font-size: 13px"
-                                    class="mt-3 ml-1" color="teal lighten-1"
-                                    @click="checkBusinessNumber">
-                                    사업자 <br/>인증하기
-                            </v-btn>
-                        </div>
-                        <div class="d-flex">
-                            <v-text-field
-                                v-model="password"
-                                label="password를 입력하세요" 
-                                :rules="password_rule"
-                                :disabled="false"
-                                filled
-                                outlined
-                                required>
-                            </v-text-field>
-                        </div>
-                        <div class="d-flex">
-                            <v-text-field
-                                v-model="password_chk"
-                                label="password를 확인하세요" 
-                                :rules="password_check"
-                                :disabled="false"
-                                filled
-                                outlined
-                                required>
-                            </v-text-field>
-                        </div>
-                        <div>
-                            <v-btn type="submit" block x-large rounded
-                            color="orange lighten-1" class="mt-6"
-                            :disabled="!isFormValid()">회원 가입하기</v-btn>
-                        </div>
-                </table>
-                </v-form>
-            </v-card-text>
+    <v-container class="normal_account_register ">
+        <div class="normal_regist">
+            <h2 class="contents_name">사업자회원 회원가입</h2>
         </div>
-    </v-card>
-    </v-container>
+        <div class="edit2_myinfo_bigbox">
+            <p class="contents_required"><span class="required_explain">*</span>표시는 필수입력 정보입니다</p>
+            <ul class="edit2_form_list1">
+                <v-form @submit.prevent="onSubmit" ref="form">
+                <li>
+
+                    <dl>
+                        <dt><span class="required">*</span>사업자 번호</dt>
+                        <dd>
+                            <input type="text" v-model="businessNumber" @input="sanitizeBusinessNumber()" placeholder="사업자 번호를 입력하세요" />
+                            <v-btn text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" @click="checkDuplicateBusinessNumber">
+                            사업자 번호<br/> 중복 확인
+                            </v-btn>
+                            <p v-show="businessNumber && !validateBusinessNumber()" class="input-error">사업자 번호를 정확히 입력해주세요</p>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                        <dt><span class="required">*</span>이메일</dt>
+                        <dd>
+                            <input type="text" v-model="email" placeholder="이메일을 입력하세요" />
+                            <v-btn text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" @click="checkDuplicateEmail">
+                            이메일 중복 <br/> 확인
+                            </v-btn>
+                            <p v-show="email && !validateEmail()" class="input-error">이메일 주소를 정확히 입력해주세요</p>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt><span class="required">*</span>비밀번호</dt>
+                        <dd>
+                            <input :type="showPassword ? 'text' : 'password'" v-model="password" onpaste="return false" oncopy="return false" placeholder="비밀번호를 입력하세요"></input>
+                             <div class="eyes" @click="togglePasswordVisibility">
+      <v-icon style="font-size:20px;">{{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+    </div>
+                            <p v-show="password && !validatePassword()" class="input-error">비밀번호는 8글자 이상 소문자, 숫자, 특수문자를 모두 포함해야 합니다.</p>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt><span class="required">*</span>비밀번호 확인</dt>
+                        <dd>
+                            <input type="password" v-model="password_chk" onpaste="return false" oncopy="return false" @copy="cantCopyPassword(event)" placeholder="비밀번호를 확인하세요"></input>
+                            <p v-show="password_chk && !validatePasswordCheck()" class="input-error">비밀번호를 일치시켜주세요</p>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt><span class="required">*</span>이름</dt>
+                        <dd>
+                            <input type="text" v-model="userName" placeholder="성명을 입력하세요" ></input>
+                            <!-- 이름도 유효성 검사 필요한가? -->
+                            <!-- <p v-show="userName && !validateUserName()" class="input-error">성명은 2자 이상의 영문자 또는 한글로 입력하세요.</p>                         -->
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt><span class="required">*</span>닉네임</dt>
+                        <dd>
+                            <input type="text" v-model="nickName" placeholder="닉네임을 입력하세요"></input>
+                            <p v-show="nickName && !validateNickName()" class="input-error">닉네임은 영문자, 한글, 숫자로 1~8글자 이내로 입력하세요.</p>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt>주소</dt>
+                        <dd>
+                            <input type="text" @click="openPostcodeSearch()" v-model="postcode" placeholder="우편번호"></input>
+                                <v-btn @click="openPostcodeSearch()" text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" class="mt-6">우편번호 <br/> 검색</v-btn>
+                            <textarea type="text" id="oneAddress" v-model="oneAddress" style="height: 80px;" placeholder="주소"></textarea>
+                            <br>
+                            <input type="text" id="detailAddress" v-model="detailAddress" placeholder="상세주소" style="margin-top: 5px;"></input>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt>성별</dt>
+                        <dd>
+                           <select v-model="gender" class="gender-select">
+                                <option value="" hidden></option>
+                                <option value="male">남</option>
+                                <option value="female">여</option>
+                            </select>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt>생년월일</dt>
+                        <dd>
+                            <input type="date" v-model="birth" :class="{ 'placeholder': !birth }"></input>
+                        </dd>
+                    </dl>
+                    <div class="valid_form_button text-center">
+                        <v-btn type="submit" 
+                        :disabled="!isFormValid()">회원 가입하기</v-btn>
+                    </div>                       
+                </li>
+                </v-form>  
+            </ul>
+            <div class="check_membership">
+                이미 가입 하셨나요? <button style="color: #DBA901" @click="goToLoginPage()">로그인</button>
+            </div>
+        </div>
+</v-container>
 </template>
 
 <script>
 import { mapActions } from 'vuex'
+import router from '@/router'
 
 export default {
     data() {
         return {
             email: "",
             emailPass: false,
-            email_rule: [
-                v => !!v || '이메일을 입력해주세요!',
-                v => {
-                    const replaceV = v.replace(/(\s*)/g, '')
-                    const pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/
-                    return pattern.test(replaceV) || '올바른 이메일 형식으로 입력해주세요!'
-                }
-            ],
-
-            businessNumber: "",
-            businessNumber_rule: [
-                v => !!v || '사업자 번호를 입력하세요',
-                v => v.length >= 10 || '사업자 번호는 10자리로 구성됩니다.',
-                v => (v >= 1000000000 && v <= 9999999999) || '올바른 사업자 번호를 입력해주세요!.'
-            ],
 
             password: "",
-            // passwordPass: false,
-            password_rule: [
-                v => !!v || '비밀번호를 입력하세요',
-                v => v.length >= 8 || '비밀번호는 최소 8자 이상이어야 합니다.',
-                v => /(?=.*[a-z])(?=.*\d)(?=.*(_|[^\w])).+/g.test(v) || '비밀번호는 소문자, 숫자, 특수문자를 모두 포함해야 합니다.'
-            ],
             password_chk: "",
-            password_check: [
-                v => !!v || '비밀번호를 확인하세요',
-                v => v === this.password || '비밀번호가 일치하지 않습니다.'
-            ],
+            showPassword: false,
+
+            postcode: "",
+            oneAddress: "",
+            detailAddress: "",
+
+            nickName: "",
+            userName: "",
+            birth: "",
+            gender: "",
+            businessNumber: '',
         }
     },
     methods: {
         ...mapActions('accountModule', ['requestSpringToCheckEmailDuplication']),
         onSubmit() {
+            if (!this.email) {
+                alert("이메일을 입력해주세요!")
+                return;
+            }
+            if (!this.emailPass) {
+                alert("이메일 중복 확인을 해주세요!")
+                return;
+            }
+            if (!this.password) {
+                alert("비밀번호를 입력해주세요!")
+                return;
+            }
+            if (!this.password_chk) {
+                alert("비밀번호를 확인해주세요!")
+            }
+            if (!this.userName) {
+                alert("성명을 입력해주세요!")
+                return;
+            }
+            if (!this.nickName) {
+                alert("성명을 입력해주세요!")
+                return;
+            }
+
+            this.address = this.combineAddress()
+
             if (this.$refs.form.validate()) {
-                const { email, password, businessNumber } = this
-                this.$emit("submit", { email, password, businessNumber })
+                const { email, password, address, userName, nickName, gender, birth, businessNumber } = this
+                this.$emit("submit", { email, password, address, userName, nickName, gender, birth, businessNumber })
             } else {
                 alert('올바른 정보를 입력하세요!')
             }
-
-            if (!this.emailPass) {
-                alert("이메일 중복 확인을 해주세요!")
-            }
         },
+
+        validateEmail() {
+            if (!this.email) return false;
+
+            const replaceV = this.email.replace(/(\s*)/g, '');
+            const pattern = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/;
+            return pattern.test(replaceV);
+        },
+
+        validatePassword() {
+            if (!this.password) return false;
+
+            const pattern = /(?=.*[a-z])(?=.*\d)(?=.*(_|[^\w])).+/g;
+            return this.password.length >= 8 && pattern.test(this.password);
+        },
+
+        validatePasswordCheck() {
+            if (!this.password_chk) return false;
+
+            return this.password_chk === this.password;
+        },
+
+        // validateUserName() {
+        //     if (!this.userName) return false;
+
+        //     const pattern = /^[a-zA-Z가-힣]{2,}$/;
+        //     return pattern.test(this.userName);
+        // },
+
+        validateNickName() {
+            if (!this.nickName) return false;
+
+            const pattern = /^[a-zA-Z가-힣0-9]{1,8}$/;
+            return pattern.test(this.nickName);
+        },
+
+        validateBusinessNumber() {
+            if (!this.businessNumber) return false;
+
+            const pattern = /^[1-9][0-9]{9}$/;
+            return pattern.test(this.businessNumber);
+        },
+
         async checkDuplicateEmail() {
             const emailValid = this.email.match(
                 /^(([^<>()[\]\\.,;:\s@]+(\.[^<>()[\]\\.,;:\s@]+)*)|(.+))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -145,27 +225,205 @@ export default {
                 this.emailPass = await this.requestSpringToCheckEmailDuplication({ email })
             }
         },
-        isFormValid() {
-            return this.emailPass && this.email_rule[1](this.email) === true
-        },
-        checkBusinessNumber() {
 
+        checkDuplicateBusinessNumber() {
+
+        },
+
+        sanitizeBusinessNumber() {
+            this.businessNumber = this.businessNumber.replace(/[^\d]/g, '');
+        },
+
+        isFormValid() {
+            const isEmailValid = this.validateEmail();
+            const isPasswordValid = this.validatePassword();
+            const isPasswordCheckValid = this.validatePasswordCheck();
+            const isNickNameValid = this.validateNickName();
+
+            return isEmailValid && isPasswordValid && isPasswordCheckValid && isNickNameValid;
+        },
+
+        togglePasswordVisibility() {
+            this.showPassword = !this.showPassword;
+        },
+
+        openPostcodeSearch() {
+            const vm = this;
+
+            new window.daum.Postcode({
+                oncomplete: function (data) {
+                    if (vm.oneAddress !== "") {
+                        vm.oneAddress = "";
+                    }
+                    if (data.userSelectedType === "R") {
+                        vm.oneAddress = data.roadAddress;
+                    } else {
+                        vm.oneAddress = data.jibunAddress;
+                    }
+
+                    if (data.userSelectedType === "R") {
+                        if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+                            vm.oneAddress += data.bname;
+                        }
+                        if (data.buildingName !== "" && data.apartment === "Y") {
+                            vm.oneAddress +=
+                                vm.oneAddress !== ""
+                                    ? `, ${data.buildingName}`
+                                    : data.buildingName;
+                        }
+                        if (vm.oneAddress !== "") {
+                            vm.oneAddress = `(${vm.oneAddress})`;
+                        }
+                    } else {
+                        vm.oneAddress = "";
+                    }
+                    vm.postcode = data.zonecode;
+                },
+            }).open();
+        },
+
+        goToLoginPage() {
+            router.push('/signin').catch(() => { })
+        },
+
+        combineAddress() {
+            const combinedAddress = `${this.postcode} ${this.oneAddress} ${this.detailAddress}`;
+            return combinedAddress.trim();
         },
     },
 }
 </script>
 
 <style scoped>
-.signupContainer {
+.normal_account_register {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -30px;
+    margin-bottom: 50px;
+}
+
+.contents_name {
     display: flex;
     justify-content: center;
 }
 
-#signupVcard {
-    width: 460px;
-    height: 610px;
-    margin-top: 30px;
-    padding-top: 30px;
-    padding-left: 18px;
+.edit2_myinfo_bigbox {
+    max-width: 500px;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 20px 20px 20px;
+    box-sizing: border-box;
+}
+
+.edit2_form_list1 li dl {
+    display: table;
+    table-layout: fixed;
+    width: 600px;
+    padding-bottom: 16px;
+}
+
+.edit2_form_list1 li dl dt {
+    display: table-cell;
+    width: 140px;
+    padding-right: 10px;
+    line-height: 1.37;
+    color: #555;
+}
+
+.edit2_form_list1 li dl dd {
+    display: table-cell;
+    color: #555;
+}
+
+.edit2_form_list1 li dl dd input {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 30px;
+    width: 200px;
+    padding-left: 5px
+}
+
+.edit2_form_list1 li dl dd textarea {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 30px;
+    width: 200px;
+    padding-left: 5px
+}
+
+.edit2_form_list1 li dl dd input[type="date"]:hover {
+    cursor: pointer;
+}
+
+.edit2_form_list1 li dl dd select {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    height: 30px;
+    width: 200px;
+    padding-left: 5px
+}
+
+.edit2_form_list1 li dl dd select:hover {
+    cursor: pointer;
+}
+
+.edit2_form_list1 li dl dd input::placeholder {
+    font-size: 13px;
+}
+
+.edit2_form_list1 li dl dd textarea::placeholder {
+    font-size: 13px;
+}
+
+.edit2_form_list1 {
+    border-bottom: 1px solid rgb(146, 134, 134);
+    padding: 0 20px 30px 0;
+    display: block;
+    margin-top: 35px;
+}
+
+.required {
+    color: red;
+    float: right;
+    margin-top: 3px;
+}
+
+.required_explain {
+    color: red;
+    margin-bottom: 30px;
+}
+
+.contents_required {
+    color: gray;
+    margin-bottom: 20px;
+    font-size: 13px;
+    float: right;
+}
+
+.check_membership {
+    margin-top: 10px;
+}
+
+.valid_form_button {
+    margin-left: 170px;
+}
+
+input[type="date"].placeholder {
+    color: gray;
+    font-size: 13px;
+}
+
+.input-error {
+    line-height: 16px;
+    font-size: 11px;
+    color: red;
+}
+
+.eyes {
+    float: right;
+    cursor: pointer;
+    margin-right: 235px;
 }
 </style>
