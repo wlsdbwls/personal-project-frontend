@@ -31,13 +31,24 @@
                         </dd>
                     </dl>
 
+                     <dl>
+                        <dt><span class="required">*</span>이메일 인증번호</dt>
+                        <dd>
+                            <input type="text" v-model="verificationCode" placeholder="인증 코드를 입력하세요" />
+                            <v-btn text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" @click="verifyEmail">
+                            이메일 인증 
+                            </v-btn>
+                            <p style="font-size: 13px;" v-if="isEmailVerified">이메일이 인증되었습니다.</p>
+                        </dd>
+                    </dl>
+
                     <dl>
                     <dt><span class="required">*</span>비밀번호</dt>
                         <dd>
                             <input :type="showPassword ? 'text' : 'password'" v-model="password" onpaste="return false" oncopy="return false" placeholder="비밀번호를 입력하세요"></input>
                              <div class="eyes" @click="togglePasswordVisibility">
-      <v-icon style="font-size:20px;">{{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
-    </div>
+                            <v-icon style="font-size:20px;">{{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}</v-icon>
+                            </div>
                             <p v-show="password && !validatePassword()" class="input-error">비밀번호는 8글자 이상 소문자, 숫자, 특수문자를 모두 포함해야 합니다.</p>
                         </dd>
                     </dl>
@@ -113,11 +124,16 @@
 import { mapActions } from 'vuex'
 import router from '@/router'
 
+const accountModule = 'accountModule'
+
 export default {
     data() {
         return {
             email: "",
             emailPass: false,
+            verificationCode: "",
+            isEmailVerified: false,
+            code: "",
 
             password: "",
             password_chk: "",
@@ -135,8 +151,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions('accountModule', ['requestSpringToCheckEmailDuplication']),
+        ...mapActions(accountModule, ['requestSpringToCheckEmailDuplication',
+            'requestEmailCodeToSpring']),
         onSubmit() {
+            if (!this.businessNumber) {
+                alert("사업자 번호를 입력해주세요!")
+                return;
+            }
             if (!this.email) {
                 alert("이메일을 입력해주세요!")
                 return;
@@ -157,7 +178,11 @@ export default {
                 return;
             }
             if (!this.nickName) {
-                alert("성명을 입력해주세요!")
+                alert("닉네임을 입력해주세요!")
+                return;
+            }
+            if (!this.verificationCode) {
+                alert("인증번호를 입력해주세요!")
                 return;
             }
 
@@ -223,6 +248,20 @@ export default {
                 const { email } = this
                 console.log('before actions - email: ' + email)
                 this.emailPass = await this.requestSpringToCheckEmailDuplication({ email })
+            }
+
+            if (this.emailPass) {
+                const { email } = this
+                this.code = await this.requestEmailCodeToSpring({ email })
+            }
+        },
+
+        async verifyEmail() {
+            if (this.code === this.verificationCode) {
+                this.isEmailVerified = true
+            } else {
+                this.isEmailVerified = false
+                alert("이메일 인증에 실패하였습니다.")
             }
         },
 
