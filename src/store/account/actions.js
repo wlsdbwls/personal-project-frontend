@@ -2,7 +2,8 @@ import router from '@/router'
 import axiosInst from '@/utility/axiosInst'
 
 import {
-    LOGIN_COMPLETE
+    LOGIN_COMPLETE,
+    REQUEST_ACCOUNT_TO_SPRING,
 } from './mutation-types'
 
 export default {
@@ -106,5 +107,16 @@ export default {
             .catch(() => {
                 alert("이메일 코드 통신이 불가합니다")
             })
+    },
+    requestAccountToSpring({ commit }, payload) {
+        const { userToken } = payload
+        return axiosInst.springAxiosInst.post('account/give-info', { userToken })
+            .then((resAccountRead) => {
+                console.log("회원 정보: " + JSON.stringify(resAccountRead.data));
+                commit(REQUEST_ACCOUNT_TO_SPRING, resAccountRead.data);
+            })
+            .catch(() => {
+                alert("회원이 존재하지 않습니다.");
+            });
     },
 }
