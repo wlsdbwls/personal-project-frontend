@@ -180,4 +180,28 @@ export default {
                 alert("회원 탈퇴 실패");
             });
     },
+    requestNicknameToSpring({ }, payload) {
+        const { id } = payload
+
+        return axiosInst.springAxiosInst.get(`/account/return-nickname/${id}`)
+            .then((resNickname) => {
+                console.log('닉네임: ' + resNickname.data)
+                return resNickname.data
+            })
+            .catch(() => {
+                alert("닉네임을 받아올 수 없습니다")
+            })
+    },
+    requestAccountRoleToSpring({ }, payload) {
+        const { id } = payload
+
+        return axiosInst.springAxiosInst.get(`/account/return-roleType/${id}`)
+            .then((resAccountRole) => {
+                console.log('회원 유형: ' + resAccountRole.data)
+                return resAccountRole.data
+            })
+            .catch(() => {
+                alert("회원 유형을 받아올 수 없습니다")
+            })
+    },
 }
