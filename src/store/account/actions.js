@@ -170,4 +170,14 @@ export default {
                 alert("비밀번호 수정 통신 실패");
             });
     },
+    requestDeleteAccountToSpring({ }, payload) {
+        const { id } = payload
+
+        return axiosInst.springAxiosInst.delete(`/account/${id}`, { id })
+            .then((resAccountDelete) => {
+            })
+            .catch(() => {
+                alert("회원 탈퇴 실패");
+            });
+    },
 }

@@ -73,28 +73,10 @@
                     </dl>
                 </li>
             </ul> -->
-            <ul class="edit2_form_list4">
-                <li>
-                    <h5 class="edit2_form_title">회원탈퇴</h5>
-                    <dl>
-                        <dt>
-                            정말 탈퇴하시나요?
-                        </dt>
-                        <dd>
-                            <a href="#" class="withdrawal_button">회원탈퇴</a>
-                        </dd>
-                    </dl>
-                </li>
-            </ul>
-        </div>
 
-        <!-- 비밀번호 변경 모달 -->
-        <!-- <div v-if="showPasswordModal" class="modal">
-            <h3>비밀번호 변경</h3>
-            <input v-model="newPassword" type="password">
-            <button @click="changePassword()">확인</button>
-            <button @click="closeModal('password')">취소</button>
-        </div> -->
+            <a @click="byeFoodFoot" class="withdrawal_button">회원탈퇴</a>
+
+        </div>
 
         <!-- 닉네임 변경 모달 -->
         <v-dialog v-model="showNicknameModal" max-width="800px">
@@ -176,6 +158,7 @@
 
 <script>
 import { mapActions } from 'vuex'
+import router from '@/router'
 
 const accountModule = 'accountModule'
 
@@ -208,7 +191,7 @@ export default {
 
     methods: {
         ...mapActions(accountModule, ["requestVerifyPasswordToSpring", "requestChangeNicknameToSpring",
-            "requestChangeAddressToSpring", "requestChangePasswordToSpring"]),
+            "requestChangeAddressToSpring", "requestChangePasswordToSpring", "requestDeleteAccountToSpring"]),
 
         showModal(modalType) {
             switch (modalType) {
@@ -331,6 +314,20 @@ export default {
             const combinedAddress = `${this.newPostcode} ${this.newOneAddress} ${this.newDetailAddress}`;
             return combinedAddress.trim();
         },
+
+        async byeFoodFoot() {
+            if (confirm("정말로 탈퇴하시겠습니까?")) {
+                await this.requestDeleteAccountToSpring({ id: this.account.id });
+                alert('탈퇴가 완료되었습니다! 이용해주셔서 감사합니다')
+
+                try {
+                    await router.push('/');
+                } catch (error) {
+                    console.error("메인 페이지로 이동하는데 에러가 발생했습니다:", error);
+                }
+            }
+        },
+
     },
 }
 
@@ -526,15 +523,12 @@ export default {
 
 .withdrawal_button {
     min-width: auto;
-    height: 36px;
-    padding: 0 14px;
-    border-radius: 8px;
-    background-color: #DBA901;
-    font-size: 14px;
-    color: #fff;
-    font-weight: 500;
-    line-height: 36px;
-    padding: 10px;
+    font-size: 12px;
+    color: gray;
+}
+
+.withdrawal_button:hover {
+    cursor: pointer;
 }
 
 .list_title {
