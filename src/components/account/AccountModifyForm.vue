@@ -28,20 +28,20 @@
                         <dt>닉네임</dt>
                         <dd id="nickName">{{ account.nickName }}</dd>
                         <dd class="edit2_form_list_button">
-                            <a href="#">변경</a>
+                            <a @click="showModal('nickname')">변경</a>
                         </dd>
                     </dl>
                     <dl>
                         <dt>주소</dt>
                         <dd id="address">{{ account.address }}</dd>
                         <dd class="edit2_form_list_button">
-                            <a href="#">변경</a>
+                            <a @click="showModal('address')">변경</a>
                         </dd>
                     </dl>
                     <dl>
                         <dt>비밀번호</dt>
                         <dd class="edit2_form_list_button">
-                            <a href="#">변경</a>
+                            <a @click="showModal('password')">변경</a>
                         </dd>
                     </dl>
                 </li>
@@ -78,9 +78,7 @@
                     <h5 class="edit2_form_title">회원탈퇴</h5>
                     <dl>
                         <dt>
-                            회원 탈퇴를 하시면 쿠폰 등
-                            <br>
-                            보유 중인 혜택은 모두 사라집니다.
+                            정말 탈퇴하시나요?
                         </dt>
                         <dd>
                             <a href="#" class="withdrawal_button">회원탈퇴</a>
@@ -89,10 +87,97 @@
                 </li>
             </ul>
         </div>
+
+        <!-- 비밀번호 변경 모달 -->
+        <!-- <div v-if="showPasswordModal" class="modal">
+            <h3>비밀번호 변경</h3>
+            <input v-model="newPassword" type="password">
+            <button @click="changePassword()">확인</button>
+            <button @click="closeModal('password')">취소</button>
+        </div> -->
+
+        <!-- 닉네임 변경 모달 -->
+        <v-dialog v-model="showNicknameModal" max-width="800px">
+            <v-card>
+                <v-card-title style="justify-content: center;">
+                    <div class="headline">닉네임 변경</div>
+                </v-card-title>
+                <v-card-text v-if="isPasswordVerified === false">
+                    <h5 class="list_title">비밀번호를 입력해 주세요</h5>
+                    <input type="password" v-model="checkPassword" name="pwd" id="pwd" placeholder="영문+숫자 10자 이상으로 입력해주세요.">
+                    <v-btn @click="verifyPassword">확인</v-btn>
+                </v-card-text>
+                <v-card-text v-if="isPasswordVerified === true">
+                    <h5 class="list_title">새로운 닉네임을 입력해 주세요</h5>
+                    <input type="text" v-model="newNickname" placeholder="영문자, 한글, 숫자로 1~8글자 이내로 입력하세요.">
+                    <v-btn @click="changeNickname">저장</v-btn>
+                </v-card-text>
+                <v-card-actions style="justify-content: center;">
+                    <v-btn @click="closeModal('nickname')">취소</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- 주소 변경 모달 -->
+        <v-dialog v-model="showAddressModal" max-width="800px">
+            <v-card>
+                <v-card-title style="justify-content: center;">
+                    <div class="headline">주소 변경</div>
+                </v-card-title>
+                <v-card-text v-if="isPasswordVerified === false">
+                    <h5 class="list_title">비밀번호를 입력해 주세요</h5>
+                    <input type="password" v-model="checkPassword" name="pwd" id="pwd"
+                        placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
+                    <v-btn @click="verifyPassword">확인</v-btn>
+                </v-card-text>
+                <v-card-text v-if="isPasswordVerified === true">
+                    <h5 class="list_title">새로운 주소를 입력해 주세요</h5>
+                    <input type="text" @click="openPostcodeSearch()" v-model="newPostcode" placeholder="우편번호" />
+                    <v-btn @click="openPostcodeSearch()" text large outlined
+                        style="font-size: 13px; margin-left: 20px; width:50px;" class="mt-6">우편번호 <br /> 검색</v-btn>
+                    <textarea type="text" id="oneAddress" v-model="newOneAddress" style="height: 80px;"
+                        placeholder="주소"></textarea>
+                    <br>
+                    <input type="text" id="detailAddress" v-model="newDetailAddress" placeholder="상세주소"
+                        style="margin-top: 5px;" />
+                    <v-btn @click="changeAddress">저장</v-btn>
+                </v-card-text>
+                <v-card-actions style="justify-content: center;">
+                    <v-btn @click="closeModal('address')">취소</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- 비밀번호 변경 모달 -->
+        <v-dialog v-model="showPasswordModal" max-width="800px">
+            <v-card>
+                <v-card-title style="justify-content: center;">
+                    <div class="headline">비밀번호 변경</div>
+                </v-card-title>
+                <v-card-text v-if="isPasswordVerified === false">
+                    <h5 class="list_title">비밀번호를 입력해 주세요</h5>
+                    <input type="password" v-model="checkPassword" name="pwd" id="pwd"
+                        placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
+                    <v-btn @click="verifyPassword">확인</v-btn>
+                </v-card-text>
+                <v-card-text v-if="isPasswordVerified === true">
+                    <h5 class="list_title">새로운 비밀번호를 입력해 주세요</h5>
+                    <input type="text" v-model="newPassword" placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
+                    <v-btn @click="changePassword">저장</v-btn>
+                </v-card-text>
+                <v-card-actions style="justify-content: center;">
+                    <v-btn @click="closeModal('password')">취소</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
+const accountModule = 'accountModule'
 
 export default {
     name: "AccountModifyForm",
@@ -100,6 +185,151 @@ export default {
         account: {
             type: Object,
             required: true,
+        },
+    },
+    data() {
+        return {
+            showNicknameModal: false,
+            showAddressModal: false,
+            showPasswordModal: false,
+            newNickname: "",
+            newAddress: "",
+            newPassword: "",
+            checkPassword: "",
+            email: '',
+            responsePassword: '',
+            isPasswordVerified: false,
+            id: '',
+            newPostcode: '',
+            newOneAddress: '',
+            newDetailAddress: ''
+        }
+    },
+
+    methods: {
+        ...mapActions(accountModule, ["requestVerifyPasswordToSpring", "requestChangeNicknameToSpring",
+            "requestChangeAddressToSpring", "requestChangePasswordToSpring"]),
+
+        showModal(modalType) {
+            switch (modalType) {
+                case "nickname":
+                    this.showNicknameModal = true;
+                    break;
+                case "address":
+                    this.showAddressModal = true;
+                    break;
+                case "password":
+                    this.showPasswordModal = true;
+                    break;
+            }
+        },
+        closeModal(modalType) {
+            switch (modalType) {
+                case "nickname":
+                    this.showNicknameModal = false;
+                    break;
+                case "address":
+                    this.showAddressModal = false;
+                    break;
+                case "password":
+                    this.showPasswordModal = false;
+                    break;
+            }
+        },
+
+        // 닉네임 변경
+        async changeNickname() {
+            if (this.newNickname === this.account.nickName) {
+                alert("새로운 닉네임이 이전 닉네임과 동일합니다.");
+                return;
+            }
+
+            this.newNickname = await this.requestChangeNicknameToSpring({ id: this.account.id, newNickname: this.newNickname });
+            this.closeModal("nickname");
+            location.reload();
+        },
+
+        // 주소 변경
+        async changeAddress() {
+            const newCombinedAddress = this.combineAddress();
+
+            if (newCombinedAddress === this.account.address) {
+                alert("새로운 주소가 이전 주소와 동일합니다.");
+                return;
+            }
+
+            this.newAddress = await this.requestChangeAddressToSpring({ id: this.account.id, newAddress: newCombinedAddress });
+            this.closeModal("address");
+            location.reload();
+        },
+
+
+        // 비밀번호 변경
+        async changePassword() {
+            if (this.newPassword === this.account.password) {
+                alert("새로운 비밀번호가 이전 비밀번호와 동일합니다.");
+                return;
+            }
+
+            this.newPassword = await this.requestChangePasswordToSpring({ id: this.account.id, newPassword: this.newPassword })
+            this.closeModal("password");
+            location.reload()
+        },
+
+        cancelModify() {
+            this.showNicknameModal = false
+        },
+
+        // 비밀번호 맞는지 확인
+        async verifyPassword() {
+            this.responsePassword = await this.requestVerifyPasswordToSpring({ email: this.account.email })
+
+            if (this.responsePassword === this.checkPassword) {
+                this.isPasswordVerified = true
+            } else {
+                this.isPasswordVerified = false
+                alert('비밀번호가 일치하지 않습니다!')
+            }
+        },
+
+        openPostcodeSearch() {
+            const vm = this;
+
+            new window.daum.Postcode({
+                oncomplete: function (data) {
+                    if (vm.newOneAddress !== "") {
+                        vm.newOneAddress = "";
+                    }
+                    if (data.userSelectedType === "R") {
+                        vm.newOneAddress = data.roadAddress;
+                    } else {
+                        vm.newOneAddress = data.jibunAddress;
+                    }
+
+                    if (data.userSelectedType === "R") {
+                        if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+                            vm.newOneAddress += data.bname;
+                        }
+                        if (data.buildingName !== "" && data.apartment === "Y") {
+                            vm.newOneAddress +=
+                                vm.newOneAddress !== ""
+                                    ? `, ${data.buildingName}`
+                                    : data.buildingName;
+                        }
+                        if (vm.newOneAddress !== "") {
+                            vm.newOneAddress = `(${vm.newOneAddress})`;
+                        }
+                    } else {
+                        vm.newOneAddress = "";
+                    }
+                    vm.newPostcode = data.zonecode;
+                },
+            }).open();
+        },
+
+        combineAddress() {
+            const combinedAddress = `${this.newPostcode} ${this.newOneAddress} ${this.newDetailAddress}`;
+            return combinedAddress.trim();
         },
     },
 }
@@ -120,7 +350,6 @@ export default {
 
 .edit2_form_list1,
 .edit2_form_list2,
-.edit2_form_list3,
 .edit2_form_list4 {
     border-bottom: 1px solid rgb(146, 134, 134);
     padding: 0 20px 30px 0;
@@ -142,7 +371,6 @@ export default {
 /* 상위요소 > display: table */
 .edit2_myinfo_bigbox .edit2_form_list1 li dl,
 .edit2_form_list2 li dl,
-.edit2_form_list3 li dl,
 .edit2_form_list4 li dl {
     display: table;
     table-layout: fixed;
@@ -171,16 +399,6 @@ export default {
     word-break: keep-all;
 }
 
-.edit2_form_list3 li dl dt {
-    display: table-cell;
-    width: 170px;
-    padding-right: 10px;
-    box-sizing: border-box;
-    line-height: 1.37;
-    color: #555;
-    word-break: keep-all;
-}
-
 .edit2_form_list4 li dl dt {
     display: table-cell;
     width: 50%;
@@ -193,8 +411,7 @@ export default {
 }
 
 .edit2_myinfo_bigbox .edit2_form_list1 li dl dd,
-.edit2_form_list2 li dl dd,
-.edit2_form_list3 li dl dd {
+.edit2_form_list2 li dl dd {
     display: table-cell;
     color: #555;
 }
@@ -226,6 +443,10 @@ export default {
     line-height: 30px;
     letter-spacing: -.5px;
     outline: none;
+}
+
+.edit2_form_list_button>a:hover {
+    cursor: pointer;
 }
 
 .edit2_form_list2>li>dl:nth-child(2)>dt::before {
@@ -303,48 +524,6 @@ export default {
     box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
 }
 
-.edit2_form_list3 p {
-    display: block;
-    margin-top: -5px;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.58;
-    letter-spacing: -.5px;
-    color: #888;
-}
-
-.edit2_form_ad {
-    border-radius: 8px;
-    background-color: #F1EAAC;
-    margin: 20px 0;
-    padding: 20px;
-}
-
-.edit2_form_ad>p:first-child {
-    font-size: 14px;
-    font-weight: 700;
-    line-height: 1.57;
-    letter-spacing: -.6px;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-.edit2_form_ad>p:last-child {
-    color: #1d988e;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 1.58;
-    letter-spacing: -.5px;
-}
-
-.eidt2_form_list4 li dl dt {
-    font-size: 15px;
-    font-weight: 400;
-    color: #333;
-    letter-spacing: -.6px;
-    line-height: 1.73;
-}
-
 .withdrawal_button {
     min-width: auto;
     height: 36px;
@@ -356,5 +535,14 @@ export default {
     font-weight: 500;
     line-height: 36px;
     padding: 10px;
+}
+
+.list_title {
+    font-size: 14px;
+    color: #333;
+    font-weight: 700;
+    line-height: 1.57;
+    letter-spacing: -.6px;
+    justify-content: center;
 }
 </style>

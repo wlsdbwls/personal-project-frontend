@@ -58,7 +58,7 @@ export default {
         return axiosInst.springAxiosInst.post('/account/login', payload)
             .then((resLogin) => {
                 if (resLogin.data !== "") {
-                    alert('로그인 성공!');
+                    // alert('로그인 성공!');
                     router.push('/').catch(() => { });
                     commit(LOGIN_COMPLETE, true)
                     return localStorage.setItem("userToken", resLogin.data);
@@ -77,9 +77,6 @@ export default {
                     // alert('이메일 반환 성공!');
                     return this.email = resEmail.data;
                 }
-            })
-            .catch(() => {
-                alert("통신이 불가합니다")
             })
     },
     requestAccountIdToSpring({ }, payload) {
@@ -117,6 +114,60 @@ export default {
             })
             .catch(() => {
                 alert("회원이 존재하지 않습니다.");
+            });
+    },
+    requestVerifyPasswordToSpring({ }, payload) {
+        const { email } = payload
+
+        return axiosInst.springAxiosInst.post("/account/check-password", { email })
+            .then((resCheckPassword) => {
+                console.log('올바른 password:' + resCheckPassword.data)
+                return resCheckPassword.data
+            })
+            .catch(() => {
+                alert("비밀번호 확인 통신이 불가합니다")
+            })
+    },
+    requestChangeNicknameToSpring({ }, payload) {
+        const { id, newNickname } = payload
+
+        return axiosInst.springAxiosInst.put(`/account/change-nickname/${id}`, { id, nickName: newNickname })
+            .then((resNewNickname) => {
+                if (resNewNickname.data) {
+                    alert("닉네임이 수정되었습니다.");
+                    return resNewNickname.data;
+                }
+            })
+            .catch(() => {
+                alert("닉네임 수정 통신 실패");
+            });
+    },
+    requestChangeAddressToSpring({ }, payload) {
+        const { id, newAddress } = payload
+
+        return axiosInst.springAxiosInst.put(`/account/change-address/${id}`, { id, address: newAddress })
+            .then((resNewAddress) => {
+                if (resNewAddress.data) {
+                    alert("주소가 수정되었습니다.");
+                    return resNewAddress.data;
+                }
+            })
+            .catch(() => {
+                alert("주소 수정 통신 실패");
+            });
+    },
+    requestChangePasswordToSpring({ }, payload) {
+        const { id, newPassword } = payload
+
+        return axiosInst.springAxiosInst.put(`/account/change-password/${id}`, { id, password: newPassword })
+            .then((resNewPassword) => {
+                if (resNewPassword.data) {
+                    alert("비밀번호가 수정되었습니다.");
+                    return resNewPassword.data;
+                }
+            })
+            .catch(() => {
+                alert("비밀번호 수정 통신 실패");
             });
     },
 }
