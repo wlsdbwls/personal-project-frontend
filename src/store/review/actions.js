@@ -22,9 +22,9 @@ export default {
             })
     },
     requestReviewListToSpring({ commit }, payload) {
-        const { restaurantName } = payload
+        const { restaurantId } = payload
 
-        return axiosInst.springAxiosInst.post("/review/list", { restaurantName })
+        return axiosInst.springAxiosInst.post("/review/list", { restaurantId })
             .then((resReviewList) => {
                 console.log('후기 목록: ' + resReviewList.data)
                 commit(REQUEST_REVIEW_LIST_TO_SPRING, resReviewList.data);
@@ -75,6 +75,7 @@ export default {
         return axiosInst.springAxiosInst.post("/review/average-ratings", { restaurantId })
             .then((resAverageRatings) => {
                 console.log('restaurantId:', restaurantId, '평균 별점:', resAverageRatings.data)
+                // 이거 리스트 띄울 때마다 계산하는 거 수정하기
                 return resAverageRatings.data
             })
             .catch((error) => {

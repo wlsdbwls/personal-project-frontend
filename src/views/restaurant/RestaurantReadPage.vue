@@ -5,7 +5,7 @@
       <restaurant-read-form :restaurant="restaurant" />
       <v-container fluid>
         <v-row justify="center">
-          <user-review-list-form :restaurantName="restaurant.restaurantName" :review="review" />
+          <user-review-list-form class="review-list" :restaurantName="restaurant.restaurantName" :review="review" />
           <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/>
         </v-row>
         <v-col justify="center">
@@ -47,7 +47,7 @@ export default {
 
   data() {
     return {
-      // review: null,
+      restaurantId: '',
     }
   },
 
@@ -61,7 +61,8 @@ export default {
   },
   methods: {
     ...mapActions(restaurantModule, ["requestRestaurantToSpring",]),
-    ...mapActions(reviewModule, ["requestReviewRegisterToSpring", 'requestReviewListToSpring', 'requestReviewToSpring']),
+    ...mapActions(reviewModule, ["requestReviewRegisterToSpring",
+      'requestReviewListToSpring', 'requestReviewToSpring']),
 
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");
@@ -78,7 +79,7 @@ export default {
 
   async created() {
     await this.requestRestaurantToSpring(this.id)
-    await this.requestReviewListToSpring({ restaurantName: this.restaurant.restaurantName });
+    await this.requestReviewListToSpring({ restaurantId: this.id });
   }
 }
 </script>
@@ -87,5 +88,6 @@ export default {
 .centered-button {
   margin: 0 auto;
   margin-top: 20px;
+  margin-left: 500px;
 }
 </style>
