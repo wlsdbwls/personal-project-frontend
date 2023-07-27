@@ -88,4 +88,12 @@ export default {
         alert("맛집 삭제 실패");
       });
   },
+  // restaurantVisitorToSpring({ }, id) {
+  //   return axios.springAxiosInst.get(`/restaurant/visitor/${id}`)
+  //   .then((resVisitor) => {
+  //   })
+  //   .catch(() => {
+  //     alert("방문자 받아오기 실패!")
+  //   })
+  // }
 };

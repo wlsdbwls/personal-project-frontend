@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container grid-list-xl>
         <div class="contents_box1">
             <!-- 글꼴 나중에 꾸미기 -->
             <h2 class="contents_name">맛있는 발자취!</h2>
@@ -9,7 +9,7 @@
                 <v-row>
                     <template v-for="item in findRestaurant">
                         <v-flex xs12 sm6 md4 lg3 xl2>
-                            <v-card @click="handleCellClick(item)" class="custom-card">
+                            <v-card @click="handleCellClick(item)">
                                 <div class="restaurant-image-container" v-if="item.restaurantImagePath">
                                     <v-img :src="getS3ImageUrl(item.restaurantImagePath)" aspect-ratio="1"
                                         class="restaurant-image"></v-img>
@@ -178,14 +178,9 @@ export default {
 </script>
 
 <style>
-.custom-card {
-    width: 250px;
-    height: 350px;
-    margin-bottom: 15px;
-}
-
 .restaurant_list_wrap {
-    display: block;
+    margin-top: 50px;
+    margin-bottom: 100px;
 }
 
 .star-rating {
@@ -200,7 +195,7 @@ export default {
 }
 
 .heart-icon-container {
-    margin-right: 63px;
+    margin-right: 73px;
 }
 
 .restaurant-image {
