@@ -64,7 +64,7 @@
                     <dl>
                     <dt>맛집 유형</dt>
                         <dd>
-                           <select v-model="foodType" class="restaurant-select">
+                           <select v-model="restaurantFood" class="restaurant-select">
                             <!-- <option value="" hidden>▾</option> -->
                             <option value="KOREAN">한식</option>
                             <option value="JAPANESE">일식</option>
@@ -145,7 +145,7 @@ export default {
       restaurantName: '',
       restaurantInfo: null,
       restaurantNumber: '',
-      foodType: '',
+      restaurantFood: '',
 
       restaurantTime: '',
       restaurantOpeningTime: null,
@@ -214,26 +214,14 @@ export default {
 
       await this.uploadAwsS3()
 
-      const foodTypeMap = {
-        '한식': 'KOREAN',
-        '일식': 'JAPANESE',
-        '중식': 'CHINESE',
-        '양식': 'WESTERN',
-        '태국식': 'THAI',
-        '멕시코식': 'MEXICAN',
-        '인도네시아식': 'INDONESIAN',
-        '해산물 식당': 'SEAFOOD',
-        '빵집': 'BAKERY',
-      };
-
-      const restaurantFood = await foodTypeMap[this.foodType];
+      const foodType = this.restaurantFood
 
       this.restaurantAddress = this.combineAddress();
       this.restaurantTime = this.combineRestaurantTime();
 
       const { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, restaurantInfo, userToken, imageUrls } = this;
 
-      this.$emit("submit", { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, restaurantFood, restaurantInfo, userToken, imageUrls });
+      this.$emit("submit", { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, foodType, restaurantInfo, userToken, imageUrls });
       await this.$router.push({ name: 'RestaurantListPage' });
     },
 

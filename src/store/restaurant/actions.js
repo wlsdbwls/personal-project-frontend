@@ -9,13 +9,13 @@ import axiosInst from "@/utility/axiosInst";
 
 export default {
   requestRestaurantRegisterToSpring({ }, payload) {
-    const { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, restaurantFood, restaurantInfo, userToken, imageUrls } = payload;
+    const { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, foodType, restaurantInfo, userToken, imageUrls } = payload;
 
     // menuItems 데이터를 배열로 변환
     const menus = menuItems.map(item => ({ menuItem: item.menuItem, menuPrice: item.menuPrice }));
 
     return axiosInst.springAxiosInst.post("/restaurant/register", {
-      restaurantName, restaurantNumber, menus, restaurantAddress, restaurantTime, restaurantFood, restaurantInfo, userToken, imageUrls
+      restaurantName, restaurantNumber, menus, restaurantAddress, restaurantTime, foodType, restaurantInfo, userToken, imageUrls
     })
       .then((resRestaurantRegister) => {
         if (resRestaurantRegister.data) {
