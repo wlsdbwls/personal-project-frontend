@@ -1,7 +1,6 @@
 <template lang="">
     <div>
-        <h1>음식점 등록 페이지</h1>
-        <restaurant-register-form align="center" @submit="onSubmit"/>
+        <restaurant-register-form @submit="onSubmit"/>
     </div>
 </template>
 

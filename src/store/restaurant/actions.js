@@ -9,17 +9,23 @@ import axiosInst from "@/utility/axiosInst";
 
 export default {
   requestRestaurantRegisterToSpring({ }, payload) {
-    const { restaurantName, restaurantInfo, userToken, imageUrls } = payload
+    const { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, restaurantFood, restaurantInfo, userToken, imageUrls } = payload;
 
-    return axiosInst.springAxiosInst.post("/restaurant/register", { restaurantName, restaurantInfo, userToken, imageUrls })
+    // menuItems 데이터를 배열로 변환
+    const menus = menuItems.map(item => ({ menuItem: item.menuItem, menuPrice: item.menuPrice }));
+
+    return axiosInst.springAxiosInst.post("/restaurant/register", {
+      restaurantName, restaurantNumber, menus, restaurantAddress, restaurantTime, restaurantFood, restaurantInfo, userToken, imageUrls
+    })
       .then((resRestaurantRegister) => {
         if (resRestaurantRegister.data) {
           return resRestaurantRegister.data;
         } else {
-          alert("맛집 등록 불가!");
+          alert("맛집 등록 불가! 사업자 회원이 맞으신가요?");
         }
       })
   },
+
   requestRestaurantListToSpring({ commit }) {
     return axiosInst.springAxiosInst.get("/restaurant/list")
       .then((resRestaurantList) => {
@@ -61,14 +67,13 @@ export default {
       });
   },
   requestModifyRestaurantToSpring({ }, payload) {
-    const { restaurantName, restaurantInfo, id } = payload;
+    const { restaurantName, restaurantInfo, id } = payload
+
     return axiosInst.springAxiosInst.put(`/restaurant/${id}`, { restaurantName, restaurantInfo, id })
       .then((resRestaurantModify) => {
         if (resRestaurantModify.data) {
-          alert("상품이 수정되었습니다.");
+          alert("맛집 게시물이 수정되었습니다.");
           return resRestaurantModify.data;
-        } else {
-          alert("상품 수정 불가!");
         }
       })
       .catch(() => {
@@ -80,7 +85,7 @@ export default {
       .then((resRestaurantDelete) => {
       })
       .catch(() => {
-        alert("상품삭제 실패");
+        alert("맛집 삭제 실패");
       });
   },
 };

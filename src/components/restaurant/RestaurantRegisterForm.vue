@@ -1,59 +1,137 @@
 <template lang="">
-  <v-container>
-    <div class="main-container">
-      <form @submit.prevent="onSubmit">
-        <div>
-          <div style="font-weight: bold">상호명</div>
-          <div>
-            <v-text-field type="text" class="inputValue" v-model="restaurantName" placeholder="상호명을 입력하세요"/>
-          </div>
-          <div style="font-weight: bold">맛집 정보</div> 
-          <div>
-            <v-textarea class="inputValue" rows="4" v-model="restaurantInfo" placeholder="맛집 상세 정보를 입력하세요"/>
-          </div>
-        </div>
-          <div class="room-deal-information-container">
-            <div class="room-deal-information-title">사진 등록</div>
-            <div class="room-picture-notice">
-              <ul class="room-write-wrapper">
-                <li>맛집 정보를 담은 사진은 3장 이상 등록을 권합니다.</li>
-                <li>사진 용량은 사진 한 장당 10MB 까지 등록이 가능합니다.</li>
-              </ul>
-            </div>              
-            <div class="room-file-upload-wrapper">
-              <div v-if="!file.length" class="room-file-upload-example-container">
-                <div class="room-file-upload-example">
-                  <div class="room-file-notice-item room-file-upload-button">
-                    <div class="image-box">
-                      <label for="file-selector">사진 등록</label>
-                      <input type="file" id="file-selector" ref="file" multiple @change="handleFileUpload" />
+    <div>
+      <div class="contents_box1">
+        <h2 class="contents_name">맛집 등록</h2>
+      </div>
+        <div class="main_content">
+            <p class="contents_required"><span class="required_explain">*</span>표시는 필수입력 정보입니다</p>
+            <ul class="edit2_form_list1">
+                <v-form @submit.prevent="onSubmit" ref="form">
+                <li>
+                    <dl>
+                        <dt><span class="required">*</span>상호명</dt>
+                        <dd>
+                            <input type="text" v-model="restaurantName" placeholder="상호명을 입력하세요" />
+                        </dd>
+                    </dl>
+                    
+                    <dl>
+                    <dt><span class="required">*</span>전화번호</dt>
+                        <dd>
+                            <input type="text" @input="restrictToNumeric($event)" oninput="this.value = this.value.replace(/[^0-9.]/g, '')" maxlength="11"
+                            v-model="restaurantNumber" placeholder="전화번호를 입력하세요"></input>
+                            <p class="input-message">전화번호는 '-'을 제외하고 숫자만 입력해주세요</p>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                      <dt><span class="required">*</span>메뉴</dt>
+                      <dd>
+                        <div v-for="(item, index) in menuItems" :key="index">
+                          <input v-model="item.menuItem" placeholder="메뉴를 입력하세요" />
+                          <input type="number" v-model="item.menuPrice" placeholder="가격을 입력하세요" />
+                          <button @click="removeMenuItem(index)">삭제</button>
+                          <!-- -아이콘으로 바꿀 것 -->
+                        </div>
+                        <!-- 추가 버튼이 onSubmit메서드와 통하는 것 같음 -->
+                        <button @click="addMenuItem">추가</button>
+                        <p class="input-message">메뉴는 최소 1개 입력해주세요</p>
+                      </dd>
+                    </dl>
+
+                    <dl>
+                    <dt><span class="required">*</span>주소</dt>
+                        <dd>
+                            <input type="text" @click="openPostcodeSearch()" v-model="postcode" placeholder="우편번호"></input>
+                                <v-btn @click="openPostcodeSearch()" text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" class="mt-6">우편번호 <br/> 검색</v-btn>
+                            <textarea type="text" id="oneAddress" v-model="oneAddress" style="height: 80px;" placeholder="주소"></textarea>
+                            <br>
+                            <input type="text" id="detailAddress" v-model="detailAddress" placeholder="상세주소" style="margin-top: 5px;"></input>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt>시작 시간</dt>
+                    <dd>
+                      <input type="time" v-model="restaurantOpeningTime" placeholder="영업 시간을 입력하세요" ></input></dd>
+                    </dl>
+                    <dl>
+                    <dt>마감 시간</dt>
+                    <dd>
+                      <input type="time" v-model="restaurantClosingTime" placeholder="영업 시간을 입력하세요" ></input></dd>
+                    </dl>
+
+                    <dl>
+                    <dt>맛집 유형</dt>
+                        <dd>
+                           <select v-model="foodType" class="restaurant-select">
+                            <!-- <option value="" hidden>▾</option> -->
+                            <option value="KOREAN">한식</option>
+                            <option value="JAPANESE">일식</option>
+                            <option value="CHINESE">중식</option>
+                            <option value="WESTERN">양식</option>
+                            <option value="THAI">태국식</option>
+                            <option value="MEXICAN">멕시코식</option>
+                            <option value="INDONESIAN">인도네시아식</option>
+                            <option value="SEAFOOD">해산물 식당</option>
+                            <option value="BAKERY">빵집</option>
+                          </select>
+                        </dd>
+                    </dl>
+
+                    <dl>
+                    <dt>맛집 태그</dt>
+                        <dd>
+                            <input type="text" v-model="restaurantInfo" placeholder="맛집 태그를 입력하세요"></input>
+                        </dd>
+                    </dl>
+
+                  <div class="room-deal-information-container">
+                    <div class="room-deal-information-title">사진 등록</div>
+                    <div class="room-picture-notice">
+                      <ul class="room-write-wrapper">
+                        <li>맛집 정보를 담은 사진은 3장 이상 등록을 권합니다.</li>
+                        <li>사진 용량은 사진 한 장당 10MB 까지 등록이 가능합니다.</li>
+                      </ul>
+                    </div>              
+                    <div class="room-file-upload-wrapper">
+                      <div v-if="!file.length" class="room-file-upload-example-container">
+                        <div class="room-file-upload-example">
+                          <div class="room-file-notice-item room-file-upload-button">
+                            <div class="image-box">
+                              <label for="file-selector">사진 등록</label>
+                              <input type="file" id="file-selector" ref="file" multiple @change="handleFileUpload" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div v-else class="file-preview-content-container">
+                        <div class="file-preview-container">
+                          <div v-for="(preview, index) in imagePreviews" :key="index" class="file-preview-wrapper">
+                            <div class="file-close-button" @click="deleteImage(index)" :name="file.number">x</div>
+                            <img :src="preview" style="max-width: 200px; max-height: 200px; margin-bottom: 10px;" />
+                          </div>
+                          <div class="file-preview-wrapper-upload">
+                          <div class="image-box">
+                            <label for="file">추가 사진 등록</label>
+                            <input type="file" id="file" ref="files" @change="imageAddUpload" multiple />
+                          </div>
+                        </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div v-else class="file-preview-content-container">
-                <div class="file-preview-container">
-                  <div v-for="(preview, index) in imagePreviews" :key="index" class="file-preview-wrapper">
-                    <div class="file-close-button" @click="deleteImage(index)" :name="file.number">x</div>
-                    <img :src="preview" style="max-width: 200px; max-height: 200px; margin-bottom: 10px;" />
-                  </div>
-                  <div class="file-preview-wrapper-upload">
-                  <div class="image-box">
-                    <label for="file">추가 사진 등록</label>
-                    <input type="file" id="file" ref="files" @change="imageAddUpload" multiple />
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="button-container">
-            <v-btn raised type="submit">등록</v-btn>
-            <router-link class="cancel-link" :to="{ name: 'RestaurantListPage' }">취소</router-link>
-          </div>
-      </form>
-    </div>
-  </v-container>
+
+                  <div class="valid_form_button text-center">
+                      <v-btn @click="onSubmit">등록</v-btn>
+                  </div>                       
+                  <router-link class="cancel-link" :to="{ name: 'RestaurantListPage' }">취소</router-link>
+
+                </li>
+                </v-form>  
+            </ul>
+        </div>
+      </div>
 </template>
 
 <script>
@@ -65,7 +143,17 @@ export default {
   data() {
     return {
       restaurantName: '',
-      restaurantInfo: '',
+      restaurantInfo: null,
+      restaurantNumber: '',
+      foodType: '',
+
+      restaurantTime: '',
+      restaurantOpeningTime: null,
+      restaurantClosingTime: null,
+
+      postcode: '',
+      oneAddress: '',
+      detailAddress: '',
       imageUrls: [],
 
       imagePreviews: [],
@@ -76,12 +164,14 @@ export default {
       awsIdentityPoolId: env.api.MAIN_AWS_IDENTITY_POOL_ID,
       s3: null,
       // startAfterAwsS3Bucket: null,
+
+      menuItems: [{ menuItem: "", menuPrice: "" }],
+      isAddMenuItem: false
     }
   },
 
   mounted() {
     this.userToken = localStorage.getItem("userToken")
-    console.log('userToken: ' + this.userToken)
   },
 
   methods: {
@@ -103,26 +193,48 @@ export default {
 
     async onSubmit() {
       if (!this.restaurantName) {
-        alert('상호명을 입력해주세요.');
+        alert('상호명을 입력해주세요!');
         return;
       }
 
-      if (!this.restaurantInfo) {
-        alert('맛집 정보를 입력해주세요.');
+      if (!this.restaurantNumber) {
+        alert('전화번호를 입력해주세요!');
         return;
       }
 
-      if (!this.file || this.file.length === 0) {
-        alert('이미지를 선택해주세요.');
+      if (!this.menuItems) {
+        alert('메뉴를 최소 1개 입력해주세요!');
+        return;
+      }
+
+      if (!this.oneAddress) {
+        alert('주소를 입력해주세요!');
         return;
       }
 
       await this.uploadAwsS3()
 
-      const { restaurantName, restaurantInfo, userToken, imageUrls } = this
+      const foodTypeMap = {
+        '한식': 'KOREAN',
+        '일식': 'JAPANESE',
+        '중식': 'CHINESE',
+        '양식': 'WESTERN',
+        '태국식': 'THAI',
+        '멕시코식': 'MEXICAN',
+        '인도네시아식': 'INDONESIAN',
+        '해산물 식당': 'SEAFOOD',
+        '빵집': 'BAKERY',
+      };
 
-      this.$emit("submit", { restaurantName, restaurantInfo, userToken, imageUrls })
-      await this.$router.push({ name: 'RestaurantListPage' })
+      const restaurantFood = await foodTypeMap[this.foodType];
+
+      this.restaurantAddress = this.combineAddress();
+      this.restaurantTime = this.combineRestaurantTime();
+
+      const { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, restaurantInfo, userToken, imageUrls } = this;
+
+      this.$emit("submit", { restaurantName, restaurantNumber, menuItems, restaurantAddress, restaurantTime, restaurantFood, restaurantInfo, userToken, imageUrls });
+      await this.$router.push({ name: 'RestaurantListPage' });
     },
 
     uploadAwsS3() {
@@ -154,6 +266,7 @@ export default {
       this.s3fileList = [];
       this.imagePreviews = [];
 
+      // Todo: for문 없이 여러장 올라가도 되도록 (올라갈 때 alert 띄우면 한장마다 다 올라감)
       for (let idx = 0; idx < this.$refs.file.files.length; idx++) {
         const file = this.file[idx];
         const reader = new FileReader();
@@ -194,39 +307,68 @@ export default {
       this.imageUrls.splice(index, 1); // 이미지 파일 이름을 imageUrls에서 제거
     },
 
-    // deleteAwsS3File(key) {
-    //   this.awsS3Config()
+    addMenuItem() {
+      this.menuItems.push({ menuItem: "", menuPrice: "" });
+    },
 
-    //   this.s3.deleteObject({
-    //     Key: key // key값인 파일 이름으로 지우겠다고 하는 것
-    //   }, (err, data) => {
-    //     if (err) {
-    //       return alert('AWS 버킷 데이터 삭제에 문제가 발생했습니다: ' + err.message)
-    //     }
-    //     alert('AWS 버킷 데이터 삭제가 성공적으로 완료되었습니다')
-    //     this.getAwsS3Files()
-    //   })
-    // }
+    removeMenuItem(index) {
+      this.menuItems.splice(index, 1);
+    },
+
+    // 전화번호 숫자만 입력 가능하게
+    restrictToNumeric(event) {
+      this.result = event.target.value
+    },
+
+    openPostcodeSearch() {
+      const vm = this;
+
+      new window.daum.Postcode({
+        oncomplete: function (data) {
+          if (vm.oneAddress !== "") {
+            vm.oneAddress = "";
+          }
+          if (data.userSelectedType === "R") {
+            vm.oneAddress = data.roadAddress;
+          } else {
+            vm.oneAddress = data.jibunAddress;
+          }
+
+          if (data.userSelectedType === "R") {
+            if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+              vm.oneAddress += data.bname;
+            }
+            if (data.buildingName !== "" && data.apartment === "Y") {
+              vm.oneAddress +=
+                vm.oneAddress !== ""
+                  ? `, ${data.buildingName}`
+                  : data.buildingName;
+            }
+            if (vm.oneAddress !== "") {
+              vm.oneAddress = `(${vm.oneAddress})`;
+            }
+          } else {
+            vm.oneAddress = "";
+          }
+          vm.postcode = data.zonecode;
+        },
+      }).open();
+    },
+
+    combineAddress() {
+      const combinedAddress = `${this.postcode} ${this.oneAddress} ${this.detailAddress}`;
+      return combinedAddress.trim();
+    },
+
+    combineRestaurantTime() {
+      const combineRestaurantTime = `${this.restaurantOpeningTime} ${this.restaurantClosingTime}`;
+      return combineRestaurantTime.trim();
+    },
   },
 }
 </script>
 
 <style scoped>
-.inputValue {
-  outline: none;
-  color: gray;
-  width: 270px;
-  font-weight: 300;
-  font-size: 15px;
-  padding: 8px 10px;
-}
-
-.main-container {
-  width: 1200px;
-  height: 400px;
-  margin: 0 auto;
-}
-
 .room-deal-information-container {
   margin-top: 50px;
   color: #222222;
@@ -238,123 +380,6 @@ export default {
   font-size: 18px;
   line-height: 60px;
   border-bottom: 1px solid #dddddd;
-}
-
-.room-deal-information-content-wrapper {
-  min-height: 50px;
-  display: flex;
-}
-
-.room-deal-informtaion-content-title {
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 150px;
-  background-color: #f9f9f9;
-}
-
-.room-deal-information-content {
-  width: 100%;
-  font-size: 14px;
-}
-
-.room-deal-option-selector {
-  display: flex;
-  align-items: center;
-  padding: 15px;
-}
-
-.room-deal-option-item {
-  width: 100px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.room-deal-option-item:last-child {
-  margin-left: 10px;
-}
-
-.room-deal-option-notice {
-  margin-left: auto;
-  font-size: 14px;
-  color: #888888;
-}
-
-.room-deal-option-item-deposit {
-  margin-left: 10px;
-}
-
-.room-deal-information-wrapper {
-  display: flex;
-  flex-direction: column;
-}
-
-.room-deal-information-option {
-  padding: 10px;
-  display: flex;
-  align-items: center;
-}
-
-.room-deal-information-option:last-child {
-  border-bottom: 1px solid #dddddd;
-}
-
-.room-deal-information-item-type {
-  font-size: 13px;
-  color: #fff;
-  background-color: #61b6e5;
-  min-width: 50px;
-  height: 26px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 3px;
-}
-
-.room-deal-information-item-wrapper {
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-  height: 46px;
-  width: 100%;
-}
-
-.room-deal-information-item-wrapper>input {
-  border: 1px solid #dddddd;
-  width: 140px;
-  height: 100%;
-  padding: 0 15px;
-  font-size: 15px;
-}
-
-.room-deal-inforamtion-won {
-  margin: 0 10px;
-}
-
-.room-deal-information-example {
-  color: #888888;
-}
-
-.room-deal-information-option:not(:first-child) {
-  margin-top: 10px;
-}
-
-.room-deal-inforamtion-divide {
-  font-size: 22px;
-  margin: 0 8px;
-  color: #222222;
-  font-weight: 100;
-}
-
-.room-deal-close-button-wrapper {
-  margin-left: auto;
-  cursor: pointer;
 }
 
 .room-deal-close-button {
@@ -412,18 +437,11 @@ export default {
   width: 100%; */
 }
 
-.room-file-image-example-wrapper {
-  text-align: center;
-}
-
 .room-file-notice-item {
   margin-top: 5px;
   text-align: center;
 }
 
-.room-file-notice-item-red {
-  color: #ef4351;
-}
 
 .image-box {
   margin-top: 30px;
@@ -494,44 +512,133 @@ export default {
   height: 130px;
 }
 
-.room-write-button-wrapper {
-  margin-top: 20px;
+.restaurant_register {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  color: #222222;
+  justify-content: center;
+  margin-top: -50px;
+  margin-bottom: 30px;
 }
 
-.room-write-button-wrapper>div {
-  width: 160px;
-  height: 50px;
-  border: 1px solid #dddddd;
+.contents_name {
   display: flex;
   justify-content: center;
+}
+
+.edit2_myinfo_bigbox {
+  max-width: 500px;
+  flex-direction: column;
   align-items: center;
-  font-size: 15px;
+  padding: 24px 20px 20px 20px;
+  box-sizing: border-box;
+}
+
+.edit2_form_list1 li dl {
+  display: table;
+  table-layout: fixed;
+  width: 600px;
+  padding-bottom: 16px;
+}
+
+.edit2_form_list1 li dl dt {
+  display: table-cell;
+  width: 140px;
+  padding-right: 10px;
+  line-height: 1.37;
+  color: #555;
+}
+
+.edit2_form_list1 li dl dd {
+  display: table-cell;
+  color: #555;
+}
+
+.edit2_form_list1 li dl dd input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 30px;
+  width: 200px;
+  padding-left: 5px
+}
+
+.edit2_form_list1 li dl dd textarea {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 30px;
+  width: 200px;
+  padding-left: 5px
+}
+
+.edit2_form_list1 li dl dd input[type="time"]:hover {
   cursor: pointer;
 }
 
-.room-write-button {
-  margin-left: 15px;
-  color: #fff;
-  background-color: #1564f9;
+.edit2_form_list1 li dl dd select {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: 30px;
+  width: 200px;
+  padding-left: 5px
 }
 
-.room-write-button:hover {
-  opacity: 0.8;
+.edit2_form_list1 li dl dd select:hover {
+  cursor: pointer;
 }
 
-.button-container {
-  margin-top: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.button-container>.cancel-link {
+.edit2_form_list1 li dl dd input::placeholder {
   font-size: 13px;
-  margin-left: 10px;
+}
+
+.edit2_form_list1 li dl dd textarea::placeholder {
+  font-size: 13px;
+}
+
+.edit2_form_list1 {
+  border-bottom: 1px solid rgb(146, 134, 134);
+  padding: 0 20px 30px 0;
+  display: block;
+  margin-top: 35px;
+}
+
+.required {
+  color: red;
+  float: right;
+  margin-top: 3px;
+}
+
+.required_explain {
+  color: red;
+  margin-bottom: 30px;
+}
+
+.contents_required {
+  color: gray;
+  margin-bottom: 20px;
+  font-size: 13px;
+  float: right;
+}
+
+input[type="date"].placeholder {
+  color: gray;
+  font-size: 13px;
+}
+
+.input-error {
+  line-height: 16px;
+  font-size: 11px;
+  color: red;
+}
+
+.input-message {
+  line-height: 16px;
+  font-size: 11px;
+  margin-left: 5px;
+}
+
+.input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 </style>
