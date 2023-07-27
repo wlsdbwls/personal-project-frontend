@@ -1,38 +1,57 @@
 <template>
-    <v-container grid-list-xl>
-        <v-layout row wrap>
-            <template v-for="item in findRestaurant">
-                <v-flex xs12 sm6 md4 lg3 xl2>
-                    <v-card @click="handleCellClick(item)">
-                        <v-img :src="getS3ImageUrl(item.restaurantImagePath)"></v-img>
-                        <v-card-text>
-                            <!-- <div>{{ restaurant.type }}</div> 음식점 타입 추가하기!! -->
-                            <div>{{ item.restaurantName }}</div>
-                        </v-card-text>
-                        <v-divider />
-                        <v-card-actions>
-                            <v-spacer />
-                            <div justify-center>
-                                <template v-if="isLiked(item.id)">
-                                    <v-icon class="mdi mdi-heart red--text" @click.stop="toggleLike(item.id)"></v-icon>
-                                </template>
-                                <template v-else>
-                                    <v-icon class="mdi mdi-heart-outline" @click.stop="toggleLike(item.id)"></v-icon>
-                                </template>
-                            </div>
-                            <div class="star-rating">
-                                <label class="star" style="color: gold;">★ </label>
-                                <span style="font-size: 15px; color: #6E6E6E;">{{ getAverageRatings(item.id) }}</span>
-                            </div>
-                        </v-card-actions>
-                    </v-card>
-                </v-flex>
-            </template>
-        </v-layout>
-        <div>
+    <v-container>
+        <div class="contents_box1">
+            <!-- 글꼴 나중에 꾸미기 -->
+            <h2 class="contents_name">맛있는 발자취!</h2>
+        </div>
+        <div class="restaurant_list_wrap">
+            <v-layout row wrap>
+                <v-row>
+                    <template v-for="item in findRestaurant">
+                        <v-flex xs12 sm6 md4 lg3 xl2>
+                            <v-card @click="handleCellClick(item)" class="custom-card">
+                                <div class="restaurant-image-container" v-if="item.restaurantImagePath">
+                                    <v-img :src="getS3ImageUrl(item.restaurantImagePath)" aspect-ratio="1"
+                                        class="restaurant-image"></v-img>
+                                </div>
+                                <div v-else class="no-image-text">
+                                    <v-img :src="'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs'">이미지가 등록되지
+                                        않았습니다</v-img>
+                                </div>
+                                <v-card-text>
+                                    <div style="text-align: center; font-size: medium; font-weight: bold;
+                            color: black;">{{ item.restaurantName }}
+                                    </div>
+                                </v-card-text>
+                                <v-divider />
+                                <v-card-actions>
+                                    <v-spacer />
+                                    <div class="heart-icon-container">
+                                        <template v-if="isLiked(item.id)">
+                                            <v-icon class="mdi mdi-heart" style="color: red;"
+                                                @click.stop="toggleLike(item.id)"></v-icon>
+                                        </template>
+                                        <template v-else>
+                                            <v-icon class="mdi mdi-heart-outline"
+                                                @click.stop="toggleLike(item.id)"></v-icon>
+                                        </template>
+                                    </div>
+                                    <div class="star-rating">
+                                        <label class="star" style="color: gold;">★ </label>
+                                        <span style="font-size: 15px; color: #6E6E6E;">{{ getAverageRatings(item.id)
+                                        }}</span>
+                                    </div>
+                                </v-card-actions>
+                            </v-card>
+                        </v-flex>
+                    </template>
+                </v-row>
+            </v-layout>
+        </div>
+        <!-- <div>
             <input type="text" :value="searchTerm" @change="searchTerm = $event.target.value" placeholder="상호명을 입력하세요" />
             <v-btn :small="true" raised @click="findRestaurant">검색</v-btn>
-        </div>
+        </div> -->
     </v-container>
 </template>
 
@@ -159,8 +178,18 @@ export default {
 </script>
 
 <style>
+.custom-card {
+    width: 250px;
+    height: 350px;
+    margin-bottom: 15px;
+}
+
+.restaurant_list_wrap {
+    display: block;
+}
+
 .star-rating {
-    margin-right: -20px;
+    margin-right: -55px;
     font-size: 1.2rem;
     width: 5em;
     margin-top: -2px;
@@ -168,5 +197,29 @@ export default {
 
 .star-rating label {
     -webkit-text-stroke-width: 1.5px;
+}
+
+.heart-icon-container {
+    margin-right: 63px;
+}
+
+.restaurant-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.no-image-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #888;
 }
 </style>
