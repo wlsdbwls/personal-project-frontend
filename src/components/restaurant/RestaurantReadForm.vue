@@ -89,7 +89,7 @@
     <!-- 사진 클릭하면 팝업 -->
     <div v-if="showModal" class="modal">
       <span class="close" @click="closeModal">&times;</span>
-      <v-img class="modal-content" :src="getS3ImageUrl(selectedGalleryImage)" :width="modalImageWidth"
+      <v-img class="modal_content" :src="getS3ImageUrl(selectedGalleryImage)" :width="modalImageWidth"
         :height="modalImageHeight"></v-img>
     </div>
   </div>
@@ -248,43 +248,6 @@ export default {
   text-align: center;
 }
 
-.contents_post_box {
-  display: flex;
-  padding: 20px;
-}
-
-#post_filter_used,
-#post_filter_available {
-  color: #00B081;
-  font-weight: bold;
-  padding: 7px 0 11px;
-  font-size: 14px;
-  background-color: #fff;
-  text-align: center;
-  box-sizing: border-box;
-  letter-spacing: -0.6px;
-  line-height: 1.73;
-  width: 410px;
-  height: 46px;
-  border-bottom: 1px solid #cccccc;
-}
-
-#post_filter_used:hover,
-#post_filter_available:hover {
-  color: #00B081;
-  font-weight: bold;
-  padding: 7px 0 11px;
-  font-size: 14px;
-  background-color: #fff;
-  text-align: center;
-  box-sizing: border-box;
-  letter-spacing: -0.6px;
-  line-height: 1.73;
-  width: 410px;
-  height: 46px;
-  border-bottom: 3px solid #155c65;
-}
-
 .post_button_box {
   padding-bottom: 30px;
   padding-left: 300px;
@@ -305,7 +268,6 @@ export default {
   letter-spacing: -.5px;
   outline: none;
   cursor: pointer;
-  /* margin-top: 30px; */
 }
 
 .product_post_line {
@@ -342,27 +304,6 @@ export default {
   font-weight: 350;
 }
 
-.contents_box6_inner>p,
-.product_post_lastline p {
-  font-size: 11px;
-  color: #888;
-  font-weight: 400;
-  letter-spacing: -.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.product_post_lastline {
-  display: flex;
-  justify-content: start;
-  align-items: center;
-}
-
-.product_post_lastline p:first-child {
-  margin-right: 10px;
-}
-
 .post_delete_button {
   width: 20px;
   height: 20px;
@@ -392,17 +333,6 @@ export default {
   margin-top: 50px;
 }
 
-.contents_box6_inner {
-  display: flex;
-  align-items: center;
-}
-
-.product_info_line {
-  border-right: 1px solid #000;
-  height: 13px;
-  margin: 10px;
-}
-
 .product_info {
   padding-left: 10px;
 }
@@ -416,26 +346,6 @@ export default {
   margin-top: 20px;
   justify-content: center;
   align-items: center;
-}
-
-.product_image {
-  display: flex;
-  width: 259.5px;
-  height: 260px;
-  background: #fafafa url("") center center no-repeat;
-  background-size: contain;
-  border-radius: 10px;
-}
-
-.contents_box6_inner>p,
-.product_post_lastline p {
-  font-size: 11px;
-  color: #888;
-  font-weight: 400;
-  letter-spacing: -.5px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .image_gallery {
@@ -477,7 +387,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.modal-content {
+.modal_content {
   margin: auto;
   /* display: block; */
   max-width: 500px;
@@ -492,11 +402,6 @@ export default {
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
-}
-
-.restaurant_info {
-  margin-left: 10px;
-  margin-top: 2px;
 }
 
 .restaurant_answer {

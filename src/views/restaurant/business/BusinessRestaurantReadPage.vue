@@ -4,19 +4,15 @@
     <business-restaurant-read-form v-if="filteredRestaurant" :filteredRestaurant="filteredRestaurant"/>
     <p v-else>로딩중 ...</p>
       <v-container fluid>
-        <v-row justify="center">
-        <v-col cols="auto">
-          <v-btn @click="goToRestaurantModifyPage">수정</v-btn>
-        </v-col>
-        <v-col cols="auto">
-          <v-btn @click="restaurantDelete">삭제</v-btn>
-        </v-col>
-      </v-row>
-        <v-row justify="center">
-          <v-col justify="center">
-           <v-btn @click="goToMyRestaurantListPage">나의 맛집 목록으로</v-btn>
-          </v-col>
-        </v-row>
+           <div class="post_button_box">
+                <input type="button"  @click="goToRestaurantModifyPage" value="수정" class="post_button">
+           </div>
+           <div class="post_button_box">
+                <input type="button"  @click="restaurantDelete" value="삭제" class="post_button">
+            </div>
+            <div class="gotolist_button_box">
+                <input type="button"  @click="goToMyRestaurantListPage" value="나의 맛집 목록으로" class="gotolist_button">
+            </div>
       </v-container>
   </div>
 </template>
@@ -67,6 +63,48 @@ export default {
   },
 }
 </script>
-<style lang="">
-    
+<style>
+.post_button_box {
+  padding-bottom: 30px;
+  padding-left: 300px;
+}
+
+.post_button {
+  width: 60px;
+  height: 32px;
+  background-color: #F3CA5A;
+  padding: 1px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  display: block;
+  box-sizing: border-box;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -.5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.gotolist_button_box {
+  padding-bottom: 30px;
+  padding-left: 300px;
+}
+
+.gotolist_button {
+  width: 150px;
+  height: 32px;
+  background-color: #F3CA5A;
+  padding: 1px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  display: block;
+  box-sizing: border-box;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: -.5px;
+  outline: none;
+  cursor: pointer;
+}
 </style>
