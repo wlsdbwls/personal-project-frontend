@@ -90,8 +90,8 @@
                     <div class="room-deal-information-title">사진 등록</div>
                     <div class="room-picture-notice">
                       <ul class="room-write-wrapper">
-                        <li>맛집 정보를 담은 사진은 3장 이상 등록을 권합니다.</li>
-                        <li>사진 용량은 사진 한 장당 10MB 까지 등록이 가능합니다.</li>
+                        <li>맛집 정보를 담은 사진 등록을 권합니다.</li>
+                        <li>사진은 8장까지 등록 가능합니다.</li>
                       </ul>
                     </div>              
                     <div class="room-file-upload-wrapper">
@@ -344,12 +344,12 @@ export default {
     },
 
     combineAddress() {
-      const combinedAddress = `${this.postcode} ${this.oneAddress} ${this.detailAddress}`;
+      const combinedAddress = `(${this.postcode}) ${this.oneAddress} ${this.detailAddress}`;
       return combinedAddress.trim();
     },
 
     combineRestaurantTime() {
-      const combineRestaurantTime = `${this.restaurantOpeningTime} ${this.restaurantClosingTime}`;
+      const combineRestaurantTime = `${this.restaurantOpeningTime} - ${this.restaurantClosingTime}`;
       return combineRestaurantTime.trim();
     },
   },

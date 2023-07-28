@@ -1,6 +1,5 @@
 <template lang="">
   <div>
-  <h1>맛집 상세 페이지</h1>
     <template v-if="restaurant">
       <restaurant-read-form :restaurant="restaurant" />
       <v-container fluid>

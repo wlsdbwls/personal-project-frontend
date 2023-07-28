@@ -15,7 +15,8 @@
                                         class="restaurant-image"></v-img>
                                 </div>
                                 <div v-else class="no-image-text">
-                                    <v-img :src="'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs'">이미지가 등록되지
+                                    <v-img style="margin-top: 118px; margin-bottom: -118px;"
+                                        :src="'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs'">이미지가 등록되지
                                         않았습니다</v-img>
                                 </div>
                                 <v-card-text>
@@ -216,5 +217,6 @@ export default {
     border-radius: 4px;
     font-size: 14px;
     color: #888;
+    text-align: center;
 }
 </style>
