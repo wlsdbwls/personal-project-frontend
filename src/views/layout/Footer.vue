@@ -11,7 +11,10 @@
                         <!-- Top 스크롤 넣기 -->
                     </div>
                 </div>
-                <div class="footer_info">맛있는 발자취 풋풋!</div>
+                <div class="footer_info">
+                    <div>맛집 탐방 웹사이트 입니다</div>
+                    <div>맛있는 발자취 풋풋!</div>
+                </div>
             </div>
         </div>
     </footer>
@@ -66,7 +69,7 @@ export default {
 }
 
 .footer_info {
-    margin-top: 50px;
+    margin-top: 70px;
     font-size: 15px;
     color: #979798;
     font-weight: 300;

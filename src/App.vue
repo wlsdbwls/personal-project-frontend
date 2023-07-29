@@ -1,13 +1,14 @@
 <template>
   <div id="app">
+    <navigation-menu-page />
     <div class="container">
-      <navigation-menu-page />
       <div class="contents">
-        <!-- <Section />          -->
-        <router-view id="router-view" />
+        <main>
+          <router-view id="router-view" />
+        </main>
       </div>
-      <Footer />
     </div>
+    <Footer />
   </div>
 </template>
 
@@ -20,7 +21,7 @@ export default {
   name: 'App',
   components: {
     NavigationMenuPage,
-    Footer
+    Footer,
   }
 }
 </script>
@@ -34,7 +35,7 @@ export default {
 }
 
 .contents {
-  padding-bottom: 150px;
+  margin-top: 20px;
 }
 
 footer {
@@ -42,7 +43,7 @@ footer {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 150px;
+  height: 200px;
   background-color: #f2f2f2;
 }
 

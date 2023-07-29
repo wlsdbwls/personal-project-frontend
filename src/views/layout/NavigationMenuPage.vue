@@ -115,6 +115,7 @@ export default {
     signOut() {
       localStorage.removeItem("userToken")
       this[LOGIN_COMPLETE](false)
+      router.push('/').catch(() => { });
     },
   },
   async created() {
@@ -125,7 +126,7 @@ export default {
     } else {
       this[LOGIN_COMPLETE](true)
       await this.requestAccountToSpring({ userToken: this.userToken })
-      await this.requestNicknameToSpring({ id: this.account.id })
+      await this.requestNicknameToSpring(this.account.id)
       this.roleType = await this.requestAccountRoleToSpring({ id: this.account.id })
     }
   },
