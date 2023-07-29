@@ -4,7 +4,7 @@
       <restaurant-read-form :restaurant="restaurant" />
       <v-container fluid>
         <v-row justify="center">
-          <user-review-list-form class="review-list" :restaurantName="restaurant.restaurantName" :review="review" />
+          <user-review-list-form class="review-list" :restaurantName="restaurant.restaurantName" :review="review"/>
         </v-row>
         <v-col justify="center">
           <v-btn class="centered-button" @click="goToRestaurantListPage">목록으로</v-btn>
@@ -26,6 +26,7 @@ import router from "@/router"
 
 const restaurantModule = "restaurantModule"
 const reviewModule = 'reviewModule'
+const accountModule = 'accountModule'
 
 export default {
   name: "RestaurantReadPage",
@@ -50,11 +51,12 @@ export default {
   computed: {
     ...mapState(restaurantModule, ["restaurant"]),
     ...mapState(reviewModule, ["review"]),
+    // ...mapState(accountModule, ["account"]),
   },
   methods: {
     ...mapActions(restaurantModule, ["requestRestaurantToSpring",]),
-    ...mapActions(reviewModule, ["requestReviewRegisterToSpring",
-      'requestReviewListToSpring']),
+    // ...mapActions(accountModule, ["requestAccountToSpring",]),
+    ...mapActions(reviewModule, ['requestReviewListToSpring']),
 
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");
@@ -64,6 +66,7 @@ export default {
   async created() {
     await this.requestRestaurantToSpring(this.id)
     await this.requestReviewListToSpring({ restaurantId: this.id });
+    // await this.requestAccountToSpring({ userToken: this.userToken })
   }
 }
 </script>

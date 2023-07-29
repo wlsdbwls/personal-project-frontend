@@ -1,42 +1,3 @@
-<!-- <template>
-    <div class="room-deal-information-container">
-        <form @submit.prevent="submitReview">
-            <div>
-                <label for="name">{{ restaurantName }}에서 즐거운 식사하셨나요? </label>
-                <span>후기를 작성해 주세요!</span>
-                재방문 의사 있어요 - 없어요 표시하기
-            </div>
-            <div>
-                <label style="margin-top: 20px;">평점:</label>
-                <div class="register-star-rating space-x-4 mx-auto">
-                    <input type="radio" id="stars-5" name="rating" value="5" v-model="ratings" />
-                    <label for="stars-5" class="star pr-4">★</label>
-                    <input type="radio" id="stars-4" name="rating" value="4" v-model="ratings" />
-                    <label for="stars-4" class="star">★</label>
-                    <input type="radio" id="stars-3" name="rating" value="3" v-model="ratings" />
-                    <label for="stars-3" class="star">★</label>
-                    <input type="radio" id="stars-2" name="rating" value="2" v-model="ratings" />
-                    <label for="stars-2" class="star">★</label>
-                    <input type="radio" id="star-1" name="rating" value="1" v-model="ratings" />
-                    <label for="star-1" class="star">★</label>
-                </div>
-            </div>
-
-            이미지 추가하기
-            <div>
-                <label for="image">이미지 첨부</label>
-                <input type="file">
-            </div>
-            <div>
-                <label style="margin-top: 20px;" for="comment">후기:</label>
-                <textarea style="height: 100px; width: 500px;" class="writeValue" id="comment" v-model="comment"
-                    required></textarea>
-            </div>
-            <v-btn raised type="submit">후기 등록</v-btn>
-        </form>
-    </div>
-</template> -->
-
 <template>
     <div>
         <form @submit.prevent="submitReview">
@@ -62,6 +23,11 @@
                         <input type="radio" id="star-1" name="rating" value="1" v-model="ratings" />
                         <label for="star-1" class="star">★</label>
                     </div>
+                    <!-- 이미지 등록 추가하기
+                    <div>
+                    <label for="image">이미지 첨부</label>
+                    <input type="file">
+                </div> -->
 
                     <div class="product_inq_question">
                         <div>
@@ -72,7 +38,6 @@
                     </div>
 
                     <div class="post_button_box">
-                        <!-- <button  class="post_delete_button"></button> -->
                         <button raised type="submit" @click="showReviewRegisterForm" value="후기등록"
                             class="post_button">후기등록</button>
                     </div>
@@ -83,9 +48,7 @@
     </div>
 </template>
 
-
 <script>
-
 import { mapActions } from "vuex"
 
 const accountModule = 'accountModule'
@@ -100,7 +63,6 @@ export default {
     },
     data() {
         return {
-            // email: '',
             userToken: '',
             comment: '',
             ratings: '',
@@ -124,19 +86,16 @@ export default {
 
         async fetchAccountData() {
             this.userToken = localStorage.getItem("userToken");
-            // this.accountId = await this.requestAccountIdToSpring({ userToken: this.userToken });
-            // this.nickName = await this.requestNicknameToSpring(this.accountId);
             this.restaurantName = await this.requestRestaurantNameToSpring(this.id);
         },
 
-        // ...mapActions(accountModule, ["requestEmailToSpring"]),
-        // ...mapActions(accountModule, ["requestAccountIdToSpring"]),
-        // ...mapActions(accountModule, ["requestNicknameToSpring"]),
+        ...mapActions(accountModule, ["requestAccountToSpring"]),
         ...mapActions(restaurantModule, ["requestRestaurantNameToSpring"]),
     },
 
     created() {
         this.fetchAccountData();
+        this.accountId = localStorage.getItem("accountId");
     },
 };
 </script>

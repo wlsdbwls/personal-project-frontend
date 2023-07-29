@@ -1,6 +1,7 @@
 import {
     LOGIN_COMPLETE,
     REQUEST_ACCOUNT_TO_SPRING,
+    SET_ACCOUNT_ID,
 } from './mutation-types'
 
 export default {
@@ -9,5 +10,8 @@ export default {
     },
     [REQUEST_ACCOUNT_TO_SPRING](state, receivedData) {
         state.account = receivedData
+    },
+    [SET_ACCOUNT_ID](state, receivedData) {
+        state.accountId = receivedData
     },
 }

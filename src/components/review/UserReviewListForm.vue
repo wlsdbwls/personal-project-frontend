@@ -1,63 +1,76 @@
 <template>
     <v-container grid-list-xl>
-        <h2>사용자 리뷰</h2>
-        <v-layout row wrap>
-            <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in Reviews" :key="item.id">
-                <v-card @click="handleCellClick(item)">
-                    <!-- <v-img :src="getS3ImageUrl(item.restaurantImagePath)"></v-img> -->
-                    <v-card-text>
-                        <div>
-                            <v-menu offset-y>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <div class="menu-icon">
-                                        <v-btn icon v-bind="attrs" v-on="on">
-                                            <v-icon>mdi-dots-vertical</v-icon>
-                                        </v-btn>
+        <div style="margin-top:50px;" class="contents_box1">
+            <h2 class="contents_name">사용자 리뷰</h2>
+        </div>
+        <div class="user_review_list">
+            <v-layout row wrap class="user_review">
+                <v-row>
+                    <v-flex xs12 sm6 md4 lg3 xl2 v-for="item in Reviews" :key="item.id">
+                        <v-card @click="handleCellClick(item)">
+                            <!-- <v-img :src="getS3ImageUrl(item.restaurantImagePath)"></v-img> -->
+                            <v-card-text>
+                                <div>
+                                    <v-menu offset-y>
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <div class="menu-icon">
+                                                <v-btn icon v-bind="attrs" v-on="on" @click="handleMenuClick(item)">
+                                                    <v-icon>mdi-dots-vertical</v-icon>
+                                                </v-btn>
+                                            </div>
+                                        </template>
+                                        <div v-if="isMyAccount === true">
+                                            <v-list>
+                                                <v-list-item @click="handleShare(item)">
+                                                    <v-list-item-icon>
+                                                        <v-icon small>mdi-share</v-icon>
+                                                    </v-list-item-icon>
+                                                    <v-list-item-content style="font-size: 13px;">공유</v-list-item-content>
+                                                </v-list-item>
+                                                <v-list-item @click="openModifyDialog(item)">
+                                                    <v-list-item-icon>
+                                                        <v-icon small>mdi-pencil</v-icon>
+                                                    </v-list-item-icon>
+                                                    <v-list-item-content style="font-size: 13px;">수정</v-list-item-content>
+                                                </v-list-item>
+                                                <v-list-item @click="handleDelete(item)">
+                                                    <v-list-item-icon>
+                                                        <v-icon small>mdi-delete</v-icon>
+                                                    </v-list-item-icon>
+                                                    <v-list-item-content style="font-size: 13px;">삭제</v-list-item-content>
+                                                </v-list-item>
+                                            </v-list>
+                                        </div>
+                                        <div v-if="isMyAccount === false">
+                                            <v-list>
+                                                <v-list-item @click=" handleShare(item)">
+                                                    <v-list-item-icon>
+                                                        <v-icon small>mdi-share</v-icon>
+                                                    </v-list-item-icon>
+                                                    <v-list-item-content style="font-size: 13px;">공유</v-list-item-content>
+                                                </v-list-item>
+                                                <v-list-item @click="openModifyDialog(item)">
+                                                    <v-list-item-icon>
+                                                        <v-icon small>mdi-pencil</v-icon>
+                                                    </v-list-item-icon>
+                                                    <v-list-item-content style="font-size: 13px;">신고</v-list-item-content>
+                                                </v-list-item>
+                                            </v-list>
+                                        </div>
+                                    </v-menu>
+                                    <div class="list-star-rating space-x-4 mx-auto">
+                                        <label v-for="star in 5" :key="star" class="star"
+                                            :style="{ color: star <= item.ratings ? 'gold' : 'white' }">★</label>
                                     </div>
-                                </template>
-                                <v-list style="width: 85px; height: 122px;">
-                                    <v-list-item style="margin-top: -10px;" @click="handleShare(item)">
-                                        <v-list-item-icon>
-                                            <v-icon small>mdi-share</v-icon>
-                                        </v-list-item-icon>
-                                        <v-list-item-content
-                                            style="font-size: 13px; margin-left: -30px;">공유</v-list-item-content>
-                                    </v-list-item>
-                                    <v-list-item style="margin-top: -10px;" @click="openModifyDialog(item)">
-                                        <v-list-item-icon>
-                                            <v-icon small>mdi-pencil</v-icon>
-                                        </v-list-item-icon>
-                                        <v-list-item-content
-                                            style="font-size: 13px; margin-left: -30px;">수정</v-list-item-content>
-                                    </v-list-item>
-                                    <v-list-item style="margin-top: -10px;" @click="handleDelete(item)">
-                                        <v-list-item-icon>
-                                            <v-icon small>mdi-delete</v-icon>
-                                        </v-list-item-icon>
-                                        <v-list-item-content
-                                            style="font-size: 13px; margin-left: -30px;">삭제</v-list-item-content>
-                                    </v-list-item>
-                                </v-list>
-                            </v-menu>
-                            <div class="list-star-rating space-x-4 mx-auto">
-                                <label v-for="star in 5" :key="star" class="star"
-                                    :style="{ color: star <= item.ratings ? 'gold' : 'white' }">★</label>
-                            </div>
-                        </div>
-                        <v-divider />
-                        <p></p>
-                        <div>{{ item.comment }}</div>
-                    </v-card-text>
-
-                    <!-- <div v-else>
-                        <v-card-actions>
-                            <v-btn @click="handleShare(item)">공유</v-btn>
-                            <v-btn @click="handleReport(item)">신고</v-btn>
-                        </v-card-actions>
-                    </div> -->
-                </v-card>
-            </v-flex>
-        </v-layout>
+                                </div>
+                                <v-divider />
+                                <div style="margin-top:10px">{{ item.comment }}</div>
+                            </v-card-text>
+                        </v-card>
+                    </v-flex>
+                </v-row>
+            </v-layout>
+        </div>
 
         <!-- 수정용 팝업 -->
         <v-dialog v-model="showModifyDialog" max-width="800px">
@@ -71,11 +84,8 @@
                 <v-card-actions style="justify-content: center;">
                     <v-btn @click="cancelModify">취소</v-btn>
                 </v-card-actions>
-
             </v-card>
-
         </v-dialog>
-
     </v-container>
 </template>
 
@@ -86,6 +96,7 @@ import { mapState, mapActions } from 'vuex'
 import UserReviewModifyForm from '@/components/review/UserReviewModifyForm.vue'
 
 const reviewModule = 'reviewModule'
+const accountModule = 'accountModule'
 
 export default {
     components: {
@@ -98,14 +109,13 @@ export default {
             showModifyDialog: false,
             userToken: '',
             registeredReview: null,
-            modifiedReview: null
+            modifiedReview: null,
+            isMyAccount: false,
         }
     },
 
     methods: {
-        ...mapActions(reviewModule, ["requestModifyReviewToSpring",]),
-        ...mapActions(reviewModule, ["requestReviewToSpring",]),
-        ...mapActions(reviewModule, ["requestDeleteReviewToSpring",]),
+        ...mapActions(reviewModule, ["requestModifyReviewToSpring", "requestReviewToSpring", "requestDeleteReviewToSpring"]),
 
         handleCellClick(item) {
             this.id = item.id
@@ -120,8 +130,9 @@ export default {
         // },
 
         async openModifyDialog(item) {
-            this.id = item.id;
-            this.registeredReview = await this.requestReviewToSpring(this.id);
+            this.id = item.id
+            this.registeredReview = await this.requestReviewToSpring(this.id)
+            console.log(this.registeredReview)
 
             this.showModifyDialog = true;
         },
@@ -137,26 +148,57 @@ export default {
         },
 
         async handleDelete(item) {
-            this.id = item.id;
-            this.modifiedReview = await this.requestDeleteReviewToSpring(this.id);
-        }
+            this.id = item.id
+            this.modifiedReview = await this.requestDeleteReviewToSpring(this.id)
+        },
+
+        // async handleMenuClick(item) {
+        //     await this.requestReviewToSpring(item.id)
+        //     console.log("후기 등록한 accountId: " + item.accountId);
+        // },
+
+        handleMenuClick(item) {
+            this.requestReviewToSpring(item.id)
+                .then((reviewData) => {
+                    console.log("후기 등록한 accountId: " + reviewData.accountId);
+                    console.log("로그인한 accountId: " + this.accountId)
+                    this.isMyAccount = reviewData.accountId == this.accountId;
+                })
+                .catch(() => {
+                    console.error("후기 읽기 실패!");
+                });
+        },
+
     },
 
     computed: {
         ...mapState(reviewModule, ['reviews']),
         ...mapState(reviewModule, ['review']),
+
         Reviews() {
             return this.reviews
-        }
+        },
+
+        accountId() {
+            return localStorage.getItem('accountId');
+        },
     },
 
-    created() {
+    async created() {
         this.userToken = localStorage.getItem("userToken")
     },
 }
 </script>
 
 <style >
+.user_review_list {
+    margin-top: 30px;
+}
+
+.user_review {
+    display: flex;
+}
+
 .list-star-rating {
     display: flex;
     font-size: 1.5rem;
