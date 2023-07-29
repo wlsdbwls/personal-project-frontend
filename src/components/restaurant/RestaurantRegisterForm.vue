@@ -135,7 +135,6 @@
 </template>
 
 <script>
-
 import AWS from 'aws-sdk'
 import env from '@/env'
 

@@ -1,7 +1,6 @@
 <template lang="">
     <div>
-      <h1>사업자 회원 - 상세 정보 수정 페이지</h1>
-      <restaurant-modify-form v-if="restaurant" :restaurant="restaurant" @submit="onSubmit" />
+      <restaurant-modify-form v-if="filteredRestaurant" :filteredRestaurant="filteredRestaurant" @submit="onSubmit" />
       <p v-else>로딩중 ...</p>
     </div>
   </template>
@@ -24,7 +23,7 @@ export default {
         },
     },
     computed: {
-        ...mapState(restaurantModule, ["restaurant"]),
+        ...mapState(restaurantModule, ["filteredRestaurant"]),
     },
     methods: {
         ...mapActions(restaurantModule, [
@@ -32,12 +31,12 @@ export default {
             "requestModifyRestaurantToSpring",
         ]),
         async onSubmit(payload) {
-            const { restaurantName, restaurantInfo } = payload;
+            const { modifiedRestaurantName, modifiedRestaurantInfo } = payload;
             const id = this.id;
 
             await this.requestModifyRestaurantToSpring({
-                restaurantName,
-                restaurantInfo,
+                modifiedRestaurantName,
+                modifiedRestaurantInfo,
                 id,
             });
             await this.$router.push({

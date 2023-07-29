@@ -78,9 +78,10 @@ export default {
     computed: {
         ...mapState(restaurantModule, ['filteredRestaurants']),
         findMyRestaurant() {
-            return this.filteredRestaurants.filter((filteredRestaurants) =>
-                filteredRestaurants.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
-            );
+            // return this.filteredRestaurants.filter((filteredRestaurants) =>
+            //     filteredRestaurants.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
+            // );
+            return this.filteredRestaurants
         },
     },
 }

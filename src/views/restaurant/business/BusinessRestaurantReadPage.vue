@@ -1,6 +1,5 @@
 <template lang="">
   <div>
-    <h1>사업자용 상세 페이지 - 삭제/수정 가능</h1>
     <business-restaurant-read-form v-if="filteredRestaurant" :filteredRestaurant="filteredRestaurant"/>
     <p v-else>로딩중 ...</p>
       <v-container fluid>

@@ -161,10 +161,10 @@ export default {
     computed: {
         ...mapState(restaurantModule, ['restaurants']),
         findRestaurant() {
-            const restaurants = this.restaurants.filter((restaurant) =>
-                restaurant.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
-            )
-            return restaurants
+            // const restaurants = this.restaurants.filter((restaurant) =>
+            //     restaurant.restaurantName.toLowerCase().includes(this.searchTerm.toLowerCase())
+            // )
+            return this.restaurants
         },
 
         isLiked() {
