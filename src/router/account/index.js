@@ -8,7 +8,6 @@ import AccountLoginPage from '@/views/account/AccountLoginPage.vue'
 import BusinessMyPage from '@/views/account/business/BusinessMyPage.vue'
 import NormalMyPage from '@/views/account/normal/NormalMyPage.vue'
 import AccountModifyPage from '@/views/account/AccountModifyPage.vue'
-import AccountCheckPage from '@/views/account/AccountCheckPage.vue'
 
 Vue.use(VueRouter)
 
