@@ -81,7 +81,7 @@ jobs:
           script_stop: true
           script: |
             cd personal-project/actions-runner-front/frontend-tmp-repo
-            cp -r ./dist/* ./html/
+            cp -r ~/dist/* ./html/
             docker image prune -f
             docker logout
             
