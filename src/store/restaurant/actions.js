@@ -95,5 +95,15 @@ export default {
   //   .catch(() => {
   //     alert("방문자 받아오기 실패!")
   //   })
-  // }
+  // },
+  requestRestaurantNameToSpring({ }, id) {
+    return axiosInst.springAxiosInst.get(`/restaurant/return-name/${id}`)
+      .then((resRestaurantName) => {
+        console.log("맛집 이름: " + JSON.stringify(resRestaurantName.data));
+        return resRestaurantName.data
+      })
+      .catch(() => {
+        alert("맛집이 존재하지 않습니다.");
+      });
+  },
 };

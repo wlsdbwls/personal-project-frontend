@@ -97,18 +97,17 @@
     <v-dialog class="review_dialog" style="height: 100%; width: 100%; max-width: none; margin: 0;"
       v-model="showReviewRegisterDialog" max-width="800px">
       <v-card>
-        <v-card-title style="justify-content: center;">
-          <div class="headline">리뷰 작성 팝업</div>
-        </v-card-title>
+        <v-card-title style="justify-content: center;"></v-card-title>
         <v-card-text>
           <div class="review-form-container">
             <user-review-form :id="restaurant.id" @submit="submitReview" />
           </div>
         </v-card-text>
-        <v-card-actions style="justify-content: center;">
-          <v-btn @click="cancelReview">취소</v-btn>
-        </v-card-actions>
-
+        <ul class="inq_button_box">
+          <li>
+            <button @click="cancelReview">취소</button>
+          </li>
+        </ul>
       </v-card>
     </v-dialog>
   </div>
@@ -450,12 +449,32 @@ export default {
 }
 
 .review_dialog {
-  position: flex;
   max-height: 80%;
   /* 최대 높이를 80%로 설정 */
   width: 1000px;
   /* 필요에 따라 고정 너비 설정 */
   max-width: 1000px;
   /* 최대 너비 설정 */
+}
+
+.inq_button_box {
+  margin: 16px 0 8px;
+  font-size: 0;
+  table-layout: fixed;
+  box-sizing: border-box;
+  text-align: right;
+  padding-bottom: 20px;
+}
+
+.inq_button_box li {
+  display: inline-block;
+  margin-right: 50px;
+}
+
+.inq_button_box li button {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.57;
+  color: #555;
 }
 </style>

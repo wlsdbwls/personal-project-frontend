@@ -5,7 +5,6 @@
       <v-container fluid>
         <v-row justify="center">
           <user-review-list-form class="review-list" :restaurantName="restaurant.restaurantName" :review="review" />
-          <!-- <user-review-form :restaurantName="restaurant.restaurantName" @submit="submitReview"/> -->
         </v-row>
         <v-col justify="center">
           <v-btn class="centered-button" @click="goToRestaurantListPage">목록으로</v-btn>
@@ -20,7 +19,6 @@
 
 <script>
 import RestaurantReadForm from "@/components/restaurant/RestaurantReadForm.vue";
-// import UserReviewForm from '@/components/review/UserReviewForm.vue'
 import UserReviewListForm from '@/components/review/UserReviewListForm.vue'
 
 import { mapActions, mapState } from "vuex"
@@ -40,7 +38,6 @@ export default {
 
   components: {
     RestaurantReadForm,
-    // UserReviewForm,
     UserReviewListForm,
   },
 
@@ -53,10 +50,6 @@ export default {
   computed: {
     ...mapState(restaurantModule, ["restaurant"]),
     ...mapState(reviewModule, ["review"]),
-
-    // handleReviewData() {
-    //   return this.review
-    // },
   },
   methods: {
     ...mapActions(restaurantModule, ["requestRestaurantToSpring",]),
@@ -66,14 +59,6 @@ export default {
     goToRestaurantListPage() {
       router.push("/restaurant-list-page");
     },
-
-    // async submitReview(payload) {
-    // await this.requestReviewRegisterToSpring(payload)
-
-    // Todo: 후기 작성 후 초기화
-    // this.$refs.userReviewForm.comment = "";
-    // this.$refs.userReviewForm.ratings = "";
-    // },
   },
 
   async created() {
