@@ -82,7 +82,7 @@
 
       <div class="post_button_box">
         <!-- <button  class="post_delete_button"></button> -->
-        <button type="button" @click="showReviewRegisterForm" value="후기작성" class="post_button">후기작성</button>
+        <button type="button" @click="showReviewRegisterForm" value="리뷰작성" class="post_button">리뷰작성</button>
       </div>
 
     </div>

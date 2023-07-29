@@ -64,7 +64,11 @@
                                     </div>
                                 </div>
                                 <v-divider />
-                                <div style="margin-top:10px">{{ item.comment }}</div>
+                                <!-- <div class="date_contents">
+                                    <div v-if="isModify === false">{{ formatDateTime(review.updateDate) }}</div>
+                                    <div v-else-if="isModify === true">{{ formatDateTime(review.createDate) }}</div>
+                                </div> -->
+                                <div style="margin-top:30px">{{ item.comment }}</div>
                             </v-card-text>
                         </v-card>
                     </v-flex>
@@ -76,14 +80,15 @@
         <v-dialog v-model="showModifyDialog" max-width="800px">
             <v-card>
                 <v-card-title style="justify-content: center;">
-                    <div class="headline">후기 수정 팝업</div>
                 </v-card-title>
                 <v-card-text>
                     <user-review-modify-form v-if="showModifyDialog" :review="modifiedReview" @submit="submitReview" />
                 </v-card-text>
-                <v-card-actions style="justify-content: center;">
-                    <v-btn @click="cancelModify">취소</v-btn>
-                </v-card-actions>
+                <ul class="inq_button_box">
+                    <li>
+                        <button @click="cancelModify">취소</button>
+                    </li>
+                </ul>
             </v-card>
         </v-dialog>
     </v-container>
@@ -99,6 +104,13 @@ const reviewModule = 'reviewModule'
 const accountModule = 'accountModule'
 
 export default {
+    props: {
+        review: {
+            type: Object,
+            required: true,
+        },
+    },
+
     components: {
         UserReviewModifyForm,
     },
@@ -111,15 +123,19 @@ export default {
             registeredReview: null,
             modifiedReview: null,
             isMyAccount: false,
+            isModify: false,
         }
     },
 
     methods: {
-        ...mapActions(reviewModule, ["requestModifyReviewToSpring", "requestReviewToSpring", "requestDeleteReviewToSpring"]),
+        ...mapActions(reviewModule, ["requestModifyReviewToSpring", "requestReviewToSpring",
+            "requestDeleteReviewToSpring"]),
 
         handleCellClick(item) {
             this.id = item.id
             console.log(this.id)
+            console.log(item.comment)
+            console.log(item.createDate)
         },
 
         // getS3ImageUrl(imageKey) {
@@ -133,18 +149,22 @@ export default {
             this.id = item.id
             this.registeredReview = await this.requestReviewToSpring(this.id)
             console.log(this.registeredReview)
+            // console.log(this.registeredReview.createDate)
+            // console.log(this.registeredReview.updateDate)
 
             this.showModifyDialog = true;
+            // this.isModify = true;
         },
 
         cancelModify() {
             this.showModifyDialog = false
+            // this.isModify = false
         },
 
         async submitReview(payload) {
-
             await this.requestModifyReviewToSpring(payload)
             this.showModifyDialog = false
+            this.isModify = false
         },
 
         async handleDelete(item) {
@@ -169,11 +189,21 @@ export default {
                 });
         },
 
+        formatDateTime(dateTimeString) {
+            const options = {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+            };
+            return new Date(dateTimeString).toLocaleString('ko-KR', options);
+        },
     },
 
     computed: {
         ...mapState(reviewModule, ['reviews']),
-        ...mapState(reviewModule, ['review']),
+        // ...mapState(reviewModule, ['review']),
 
         Reviews() {
             return this.reviews
@@ -215,5 +245,33 @@ export default {
 .menu-icon {
     position: absolute;
     right: 0;
+}
+
+.date_contents {
+    font-size: 10px;
+    float: right;
+    /* margin-bottom: -10px; */
+    margin-top: 3px;
+}
+
+.inq_button_box {
+    margin: 16px 0 8px;
+    font-size: 0;
+    table-layout: fixed;
+    box-sizing: border-box;
+    text-align: right;
+    padding-bottom: 20px;
+}
+
+.inq_button_box li {
+    display: inline-block;
+    margin-right: 50px;
+}
+
+.inq_button_box li button {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.57;
+    color: #555;
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
     <div>
         <form @submit.prevent="submitReview">
-
             <div style="justify-content: center;" class="contents_box1">
                 <h2 class="contents_name" style="color: black;">리뷰 쓰기</h2>
             </div>
@@ -38,13 +37,12 @@
                     </div>
 
                     <div class="post_button_box">
-                        <button raised type="submit" @click="showReviewRegisterForm" value="후기등록"
-                            class="post_button">후기등록</button>
+                        <button raised type="submit" @click="showReviewRegisterForm" value="리뷰등록"
+                            class="post_button">리뷰등록</button>
                     </div>
                 </div>
             </div>
         </form>
-
     </div>
 </template>
 
