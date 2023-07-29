@@ -83,8 +83,8 @@
                         <dd>
                            <select v-model="gender" class="gender-select">
                                 <option value="" hidden></option>
-                                <option value="male">남</option>
-                                <option value="female">여</option>
+                                <option value="남">남</option>
+                                <option value="여">여</option>
                             </select>
                         </dd>
                     </dl>
@@ -412,10 +412,6 @@ export default {
 
 .check_membership {
     margin-top: 10px;
-}
-
-.valid_form_button {
-    margin-left: 170px;
 }
 
 input[type="date"].placeholder {

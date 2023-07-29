@@ -94,8 +94,8 @@
                         <dd>
                            <select v-model="gender" class="gender-select">
                                 <option value="" hidden></option>
-                                <option value="male">남</option>
-                                <option value="female">여</option>
+                                <option value="남">남</option>
+                                <option value="여">여</option>
                             </select>
                         </dd>
                     </dl>
@@ -139,14 +139,14 @@ export default {
             password_chk: "",
             showPassword: false,
 
-            postcode: "",
-            oneAddress: "",
-            detailAddress: "",
+            postcode: null,
+            oneAddress: null,
+            detailAddress: null,
 
             nickName: "",
             userName: "",
-            birth: "",
-            gender: "",
+            birth: null,
+            gender: null,
             businessNumber: '',
         }
     },
@@ -445,9 +445,7 @@ export default {
     margin-top: 10px;
 }
 
-.valid_form_button {
-    margin-left: 170px;
-}
+.valid_form_button {}
 
 input[type="date"].placeholder {
     color: gray;

@@ -4,6 +4,7 @@ import axiosInst from '@/utility/axiosInst'
 import {
     LOGIN_COMPLETE,
     REQUEST_ACCOUNT_TO_SPRING,
+    SET_ACCOUNT_ID,
 } from './mutation-types'
 
 export default {
@@ -64,7 +65,6 @@ export default {
                     return localStorage.setItem("userToken", resLogin.data);
                 } else {
                     alert('이메일과 비밀번호를 다시 확인해주세요!');
-                    location.reload();
                 }
             })
     },
@@ -79,13 +79,15 @@ export default {
                 }
             })
     },
-    requestAccountIdToSpring({ }, payload) {
+    requestAccountIdToSpring({ commit }, payload) {
         const { userToken } = payload
 
         return axiosInst.springAxiosInst.post('/account/return-accountId', { userToken })
             .then((resAccountId) => {
                 if (resAccountId.data !== "") {
                     console.log('accountId: ' + resAccountId.data)
+                    // this.accountId = resAccountId.data
+                    commit(SET_ACCOUNT_ID, resAccountId.data)
                     return localStorage.setItem("accountId", resAccountId.data);
                 }
             })
@@ -112,9 +114,9 @@ export default {
                 console.log("회원 정보: " + JSON.stringify(resAccountRead.data));
                 commit(REQUEST_ACCOUNT_TO_SPRING, resAccountRead.data);
             })
-            .catch(() => {
-                alert("회원이 존재하지 않습니다.");
-            });
+        // .catch(() => {
+        //     alert("회원이 존재하지 않습니다.");
+        // });
     },
     requestVerifyPasswordToSpring({ }, payload) {
         const { email } = payload
@@ -180,8 +182,7 @@ export default {
                 alert("회원 탈퇴 실패");
             });
     },
-    requestNicknameToSpring({ }, payload) {
-        const { id } = payload
+    requestNicknameToSpring({ }, id) {
 
         return axiosInst.springAxiosInst.get(`/account/return-nickname/${id}`)
             .then((resNickname) => {
@@ -200,8 +201,8 @@ export default {
                 console.log('회원 유형: ' + resAccountRole.data)
                 return resAccountRole.data
             })
-            .catch(() => {
-                alert("회원 유형을 받아올 수 없습니다")
-            })
+        // .catch(() => {
+        //     alert("회원 유형을 받아올 수 없습니다")
+        // })
     },
 }
