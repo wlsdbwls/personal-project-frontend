@@ -81,8 +81,8 @@
       </div>
 
       <div class="post_button_box">
-        <a href="#" class="post_delete_button">삭제</a>
-        <input type="button" value="후기작성" class="post_button">
+        <!-- <button  class="post_delete_button"></button> -->
+        <button type="button" @click="showReviewRegisterForm" value="후기작성" class="post_button">후기작성</button>
       </div>
 
     </div>
@@ -92,15 +92,36 @@
       <v-img class="modal_content" :src="getS3ImageUrl(selectedGalleryImage)" :width="modalImageWidth"
         :height="modalImageHeight"></v-img>
     </div>
+
+    <!-- 후기 등록 팝업 -->
+    <v-dialog class="review_dialog" style="height: 100%; width: 100%; max-width: none; margin: 0;"
+      v-model="showReviewRegisterDialog" max-width="800px">
+      <v-card>
+        <v-card-title style="justify-content: center;">
+          <div class="headline">리뷰 작성 팝업</div>
+        </v-card-title>
+        <v-card-text>
+          <div class="review-form-container">
+            <user-review-form :id="restaurant.id" @submit="submitReview" />
+          </div>
+        </v-card-text>
+        <v-card-actions style="justify-content: center;">
+          <v-btn @click="cancelReview">취소</v-btn>
+        </v-card-actions>
+
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import env from '@/env'
 import { mapActions } from 'vuex'
+import UserReviewForm from '../review/UserReviewForm.vue'
 
 const likeModule = 'likeModule'
 const accountModule = 'accountModule'
+const reviewModule = 'reviewModule'
 
 export default {
   name: "RestaurantReadForm",
@@ -109,6 +130,10 @@ export default {
       type: Object,
       required: true,
     },
+  },
+
+  components: {
+    UserReviewForm
   },
 
   data() {
@@ -120,11 +145,13 @@ export default {
       selectedGalleryImage: "",
       modalImageWidth: 0,
       modalImageHeight: 0,
+      showReviewRegisterDialog: false,
     }
   },
 
   methods: {
     ...mapActions(accountModule, ['requestAccountIdToSpring']),
+    ...mapActions(reviewModule, ['requestReviewRegisterToSpring']),
     ...mapActions(likeModule, ['requestLikeRestaurantToSpring',
       'requestUnlikeRestaurantToSpring', 'requestLikesCountToSpring']),
 
@@ -205,6 +232,20 @@ export default {
     // 모달 팝업을 닫기
     closeModal() {
       this.showModal = false;
+    },
+
+    async showReviewRegisterForm() {
+      this.showReviewRegisterDialog = true
+    },
+
+    async submitReview(payload) {
+
+      await this.requestReviewRegisterToSpring(payload)
+      this.showReviewRegisterDialog = false
+    },
+
+    cancelReview() {
+      this.showReviewRegisterDialog = false
     },
   },
 
@@ -406,5 +447,15 @@ export default {
 
 .restaurant_answer {
   margin-left: 10px;
+}
+
+.review_dialog {
+  position: flex;
+  max-height: 80%;
+  /* 최대 높이를 80%로 설정 */
+  width: 1000px;
+  /* 필요에 따라 고정 너비 설정 */
+  max-width: 1000px;
+  /* 최대 너비 설정 */
 }
 </style>

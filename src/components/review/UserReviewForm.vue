@@ -1,9 +1,8 @@
 <template>
     <div class="room-deal-information-container">
-        <h2>후기 작성 폼</h2>
         <form @submit.prevent="submitReview">
             <div>
-                <label for="name">{{ email }}님, {{ restaurantName }}에서 즐거운 식사하셨나요? </label>
+                <label for="name">{{ email }}님, {{ id }}에서 즐거운 식사하셨나요? </label>
                 <span>후기를 작성해 주세요!</span>
                 <!-- 일단 이메일로 설정 후 닉네임으로 수정할 것 -->
                 <!-- 재방문 의사 있어요 - 없어요 표시하기 -->
@@ -47,8 +46,8 @@ const accountModule = 'accountModule'
 
 export default {
     props: {
-        restaurantName: {
-            type: String,
+        id: {
+            type: Number,
             required: true,
         },
     },
@@ -62,10 +61,10 @@ export default {
     },
     methods: {
         submitReview() {
-            const { comment, ratings, userToken, restaurantName } = this
+            const { comment, ratings, userToken, id } = this
             console.log('내가 준 점수:', this.ratings, '내가 준 후기 코멘트:', this.comment)
 
-            this.$emit('submit', { comment, ratings, userToken, restaurantName })
+            this.$emit('submit', { comment, ratings, userToken, id })
         },
 
         ratingToPercent() {
@@ -115,11 +114,21 @@ button {
 }
 
 .room-deal-information-container {
-    margin-top: 30px;
+    /* 기존의 높이 속성 제거 */
+    /* height: 450px; */
+    max-height: 80vh;
+    /* 최대 높이를 뷰포트 높이의 80%로 설정 */
+    overflow-y: auto;
+    /* 내용이 넘칠 경우 스크롤 허용 */
+    position: flex;
+    /* margin-top: -400px; */
     color: #222222;
     border: 1px solid #dddddd;
     width: 700px;
-    height: 450px;
+    /* 높이를 600px로 조정 */
+    /* height: 600px; */
+    justify-content: center;
+    align-items: center;
 }
 
 .writeValue {

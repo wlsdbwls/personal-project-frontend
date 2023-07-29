@@ -7,9 +7,9 @@ import axiosInst from '@/utility/axiosInst'
 
 export default {
     requestReviewRegisterToSpring({ }, payload) {
-        const { ratings, comment, userToken, restaurantName } = payload
+        const { ratings, comment, userToken, id } = payload
 
-        return axiosInst.springAxiosInst.post("/review/register", { ratings, comment, userToken, restaurantName })
+        return axiosInst.springAxiosInst.post("/review/register", { ratings, comment, userToken, restaurantId: id })
             .then((resReview) => {
                 alert('후기가 작성되었습니다')
                 location.reload()
