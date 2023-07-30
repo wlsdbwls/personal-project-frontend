@@ -49,7 +49,7 @@
                                                     </v-list-item-icon>
                                                     <v-list-item-content style="font-size: 13px;">공유</v-list-item-content>
                                                 </v-list-item>
-                                                <v-list-item @click="openModifyDialog(item)">
+                                                <v-list-item @click="openReportDialog(item)">
                                                     <v-list-item-icon>
                                                         <v-icon small>mdi-pencil</v-icon>
                                                     </v-list-item-icon>
@@ -91,6 +91,22 @@
                 </ul>
             </v-card>
         </v-dialog>
+
+        <!-- 신고 팝업 -->
+        <v-dialog v-model="showReportDialog" max-width="400px">
+            <v-card>
+                <v-card-title style="justify-content: center;">리뷰 신고</v-card-title>
+                <v-card-text>
+                    <input class="report_reason" v-model="reportReason" placeholder="신고 사유" />
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <button style="margin-right: 10px;" @click="submitReport">신고</button>
+                    <button @click="closeReportDialog">취소</button>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
     </v-container>
 </template>
 
@@ -124,6 +140,9 @@ export default {
             modifiedReview: null,
             isMyAccount: false,
             isModify: false,
+
+            showReportDialog: false,
+            reportReason: '',
         }
     },
 
@@ -169,7 +188,9 @@ export default {
 
         async handleDelete(item) {
             this.id = item.id
-            this.modifiedReview = await this.requestDeleteReviewToSpring(this.id)
+            if (confirm("정말로 삭제하시겠습니까?")) {
+                this.modifiedReview = await this.requestDeleteReviewToSpring(this.id);
+            }
         },
 
         // async handleMenuClick(item) {
@@ -198,6 +219,23 @@ export default {
                 minute: '2-digit',
             };
             return new Date(dateTimeString).toLocaleString('ko-KR', options);
+        },
+
+        openReportDialog(item) {
+            this.showReportDialog = true;
+        },
+
+        closeReportDialog() {
+            this.showReportDialog = false;
+            this.reportReason = '';
+        },
+
+        submitReport() {
+            const item = this.modifiedReview;
+            const reason = this.reportReason;
+
+            this.showReportDialog = false;
+            this.reportReason = '';
         },
     },
 
@@ -273,5 +311,12 @@ export default {
     font-weight: 400;
     line-height: 1.57;
     color: #555;
+}
+
+.report_reason {
+    width: 350px;
+    height: 100px;
+    border: 1px solid gray;
+    border-radius: 5px;
 }
 </style>

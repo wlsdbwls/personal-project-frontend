@@ -1,39 +1,3 @@
-<!-- <template>
-    <div class="">
-        <form @submit.prevent="submitReview">
-            <label>후기를 수정해 주세요!</label>
-            재방문 의사 있어요 - 없어요 표시하기
-            <div>
-                <label style="margin-top: 20px;">평점:</label>
-
-            </div>
-            <div class="modify-rating space-x-4 mx-auto">
-                <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings" />
-                <label for="5-stars" class="star pr-4">★</label>
-                <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings" />
-                <label for="4-stars" class="star">★</label>
-                <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings" />
-                <label for="3-stars" class="star">★</label>
-                <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings" />
-                <label for="2-stars" class="star">★</label>
-                <input type="radio" id="1-star" name="rating" value="1" v-model="ratings" />
-                <label for="1-star" class="star">★</label>
-            </div>
-            이미지 추가하기
-            <div>
-                <label for="image">이미지 첨부</label>
-                <input type="file">
-            </div>
-            <div>
-                <label style="margin-top: 20px;" for="comment">후기:</label>
-                <textarea style="height: 100px; width: 500px;" class="writeValue" id="comment" v-model="comment"
-                    required></textarea>
-            </div>
-        </form>
-        <v-btn raised type="button" @click="submitReview">저장</v-btn>
-    </div>
-</template> -->
-
 <template>
     <div>
         <form @submit.prevent="submitReview">
@@ -70,8 +34,7 @@
                     </div>
 
                     <div class="post_button_box">
-                        <button raised type="submit" @click="showReviewRegisterForm" value="리뷰수정"
-                            class="post_button">리뷰수정</button>
+                        <button raised type="submit" value="리뷰수정" class="post_button">리뷰수정</button>
                     </div>
                 </div>
             </div>

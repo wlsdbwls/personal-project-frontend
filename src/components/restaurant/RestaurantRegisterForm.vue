@@ -25,19 +25,17 @@
                     </dl>
 
                     <dl>
-                      <dt><span class="required">*</span>메뉴</dt>
-                      <dd>
-                        <div v-for="(item, index) in menuItems" :key="index">
-                          <input v-model="item.menuItem" placeholder="메뉴를 입력하세요" />
-                          <input type="number" v-model="item.menuPrice" placeholder="가격을 입력하세요" />
-                          <button @click="removeMenuItem(index)">삭제</button>
-                          <!-- -아이콘으로 바꿀 것 -->
-                        </div>
-                        <!-- 추가 버튼이 onSubmit메서드와 통하는 것 같음 -->
-                        <button @click="addMenuItem">추가</button>
-                        <p class="input-message">메뉴는 최소 1개 입력해주세요</p>
-                      </dd>
-                    </dl>
+                    <dt><span class="required">*</span>메뉴</dt>
+                    <dd>
+                      <div v-for="(item, index) in menuItems" :key="index">
+                        <input v-model="menuItems[index].menuItem" placeholder="메뉴를 입력하세요" />
+                        <input type="number" v-model="menuItems[index].menuPrice" placeholder="가격을 입력하세요" />
+                        <a style="cursor:pointer; color:gray; font-size: 15px;" @click="removeMenuItem(index)">삭제</a>
+                      </div>
+                      <a style="cursor:pointer; color:gray; font-size: 15px;" @click="addMenuItem()">추가</a>
+                      <p class="input-message">메뉴는 최소 1개 입력해주세요</p>
+                    </dd>
+                  </dl>
 
                     <dl>
                     <dt><span class="required">*</span>주소</dt>
@@ -90,8 +88,8 @@
                     <div class="room-deal-information-title">사진 등록</div>
                     <div class="room-picture-notice">
                       <ul class="room-write-wrapper">
-                        <li>맛집 정보를 담은 사진 등록을 권합니다.</li>
-                        <li>사진은 8장까지 등록 가능합니다.</li>
+                        <li>· 맛집 정보를 담은 사진을 등록해주세요.</li>
+                        <li>· 사진은 3장 이상 등록을 권합니다.</li>
                       </ul>
                     </div>              
                     <div class="room-file-upload-wrapper">
@@ -125,7 +123,7 @@
                   <div class="valid_form_button text-center">
                       <v-btn @click="onSubmit">등록</v-btn>
                   </div>                       
-                  <router-link class="cancel-link" :to="{ name: 'RestaurantListPage' }">취소</router-link>
+                  <router-link class="cancel-link" :to="{ name: 'BusinessMyPage' }">취소</router-link>
 
                 </li>
                 </v-form>  
@@ -628,5 +626,14 @@ input[type="date"].placeholder {
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+.valid_form_button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.cancel-link {
+  font-size: 15px;
 }
 </style>

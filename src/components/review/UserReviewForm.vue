@@ -37,8 +37,7 @@
                     </div>
 
                     <div class="post_button_box">
-                        <button raised type="submit" @click="showReviewRegisterForm" value="리뷰등록"
-                            class="post_button">리뷰등록</button>
+                        <button raised type="submit" value="리뷰등록" class="post_button">리뷰등록</button>
                     </div>
                 </div>
             </div>

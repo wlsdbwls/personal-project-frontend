@@ -56,23 +56,31 @@ export default {
     },
     methods: {
         onSubmit() {
-            if (this.$refs.form.validate()) {
-                const { email, password } = this
-                this.$emit("submit", { email, password })
-            } else {
-                alert('올바른 정보를 입력하세요!') // 에러 메시지 설정
+            if (!this.isLoginValid()) {
+                return;
             }
 
-            const { email, password } = this
-            this.$emit('submit', { email, password })
+            const { email, password } = this;
+            this.$emit('submit', { email, password });
         },
 
         isLoginValid() {
             const isEmailValid = this.validateEmail();
             const isPasswordValid = this.validatePassword();
 
-            return isEmailValid && isPasswordValid
+            if (!isEmailValid || !isPasswordValid) {
+                return false;
+            }
+
+            return true;
         },
+
+        // isLoginValid() {
+        //     const isEmailValid = this.validateEmail();
+        //     const isPasswordValid = this.validatePassword();
+
+        //     return isEmailValid && isPasswordValid
+        // },
 
         validateEmail() {
             if (!this.email) return false;

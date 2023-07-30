@@ -14,21 +14,11 @@ const accountModule = 'accountModule'
 
 export default {
     name: "AccountModifyPage",
-    // props: {
-    //     id: {
-    //         type: Number,
-    //         required: true,
-    //     },
-    // },
     components: {
         AccountModifyForm,
     },
     methods: {
         ...mapActions(accountModule, ['requestModifyAccountToSpring', 'requestAccountToSpring']),
-        // async onSubmit(payload) {
-        //     const { email, password } = payload
-        //     await this.requestModifyAccountToSpring({ email, password })
-        // }
     },
     computed: {
         ...mapState(accountModule, ["account"]),

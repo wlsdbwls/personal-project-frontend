@@ -79,13 +79,13 @@ import router from '@/router'
 
 import {
   LOGIN_COMPLETE,
-  SET_SEARCH_KEYWORD,
+  // SET_SEARCH_KEYWORD,
 } from '@/store/account/mutation-types'
 
 import { mapActions, mapState, mapMutations } from 'vuex'
 
 const accountModule = 'accountModule'
-const restaurantModule = 'restaurantModule'
+// const restaurantModule = 'restaurantModule'
 
 export default {
   // components: {

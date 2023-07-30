@@ -84,18 +84,20 @@
                 <v-card-title style="justify-content: center;">
                     <div class="headline">닉네임 변경</div>
                 </v-card-title>
-                <v-card-text v-if="isPasswordVerified === false">
+                <v-card-text style="text-align: center;" v-if="isPasswordVerified === false">
                     <h5 class="list_title">비밀번호를 입력해 주세요</h5>
-                    <input type="password" v-model="checkPassword" name="pwd" id="pwd" placeholder="영문+숫자 10자 이상으로 입력해주세요.">
-                    <v-btn @click="verifyPassword">확인</v-btn>
+                    <input type="password" style="width:235px" v-model="checkPassword" name="pwd" id="pwd"
+                        placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
+                    <v-btn small @click="verifyPassword">확인</v-btn>
                 </v-card-text>
-                <v-card-text v-if="isPasswordVerified === true">
+                <v-card-text style="text-align: center;" v-if="isPasswordVerified === true">
                     <h5 class="list_title">새로운 닉네임을 입력해 주세요</h5>
-                    <input type="text" v-model="newNickname" placeholder="영문자, 한글, 숫자로 1~8글자 이내로 입력하세요.">
+                    <input type="text" style="width:285px" v-model="newNickname"
+                        placeholder="영문자, 한글, 숫자로 1~8글자 이내로 입력하세요.">
                     <v-btn @click="changeNickname">저장</v-btn>
                 </v-card-text>
                 <v-card-actions style="justify-content: center;">
-                    <v-btn @click="closeModal('nickname')">취소</v-btn>
+                    <button @click="closeModal('nickname')">취소</button>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -106,13 +108,13 @@
                 <v-card-title style="justify-content: center;">
                     <div class="headline">주소 변경</div>
                 </v-card-title>
-                <v-card-text v-if="isPasswordVerified === false">
+                <v-card-text style="text-align: center;" v-if="isPasswordVerified === false">
                     <h5 class="list_title">비밀번호를 입력해 주세요</h5>
-                    <input type="password" v-model="checkPassword" name="pwd" id="pwd"
+                    <input type="password" style="width:235px" v-model="checkPassword" name="pwd" id="pwd"
                         placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
-                    <v-btn @click="verifyPassword">확인</v-btn>
+                    <v-btn small @click="verifyPassword">확인</v-btn>
                 </v-card-text>
-                <v-card-text v-if="isPasswordVerified === true">
+                <v-card-text style="text-align: center;" v-if="isPasswordVerified === true">
                     <h5 class="list_title">새로운 주소를 입력해 주세요</h5>
                     <input type="text" @click="openPostcodeSearch()" v-model="newPostcode" placeholder="우편번호" />
                     <v-btn @click="openPostcodeSearch()" text large outlined
@@ -125,7 +127,7 @@
                     <v-btn @click="changeAddress">저장</v-btn>
                 </v-card-text>
                 <v-card-actions style="justify-content: center;">
-                    <v-btn @click="closeModal('address')">취소</v-btn>
+                    <button @click="closeModal('address')">취소</button>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -136,19 +138,20 @@
                 <v-card-title style="justify-content: center;">
                     <div class="headline">비밀번호 변경</div>
                 </v-card-title>
-                <v-card-text v-if="isPasswordVerified === false">
+                <v-card-text style="text-align: center;" v-if="isPasswordVerified === false">
                     <h5 class="list_title">비밀번호를 입력해 주세요</h5>
-                    <input type="password" v-model="checkPassword" name="pwd" id="pwd"
+                    <input style="width:235px" type="password" v-model="checkPassword" name="pwd" id="pwd"
                         placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
                     <v-btn @click="verifyPassword">확인</v-btn>
                 </v-card-text>
-                <v-card-text v-if="isPasswordVerified === true">
+                <v-card-text style="text-align: center;" v-if="isPasswordVerified === true">
                     <h5 class="list_title">새로운 비밀번호를 입력해 주세요</h5>
-                    <input type="text" v-model="newPassword" placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
-                    <v-btn @click="changePassword">저장</v-btn>
+                    <input type="password" style="width:235px;" v-model="newPassword"
+                        placeholder="영문+숫자+특수 기호 8글자 이상으로 입력해주세요.">
+                    <v-btn small @click="changePassword">저장</v-btn>
                 </v-card-text>
                 <v-card-actions style="justify-content: center;">
-                    <v-btn @click="closeModal('password')">취소</v-btn>
+                    <button @click="closeModal('password')">취소</button>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -157,8 +160,12 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapState, mapMutations } from 'vuex'
 import router from '@/router'
+
+import {
+    LOGIN_COMPLETE,
+} from '@/store/account/mutation-types'
 
 const accountModule = 'accountModule'
 
@@ -192,6 +199,8 @@ export default {
     methods: {
         ...mapActions(accountModule, ["requestVerifyPasswordToSpring", "requestChangeNicknameToSpring",
             "requestChangeAddressToSpring", "requestChangePasswordToSpring", "requestDeleteAccountToSpring"]),
+
+        ...mapMutations(accountModule, ['LOGIN_COMPLETE']),
 
         showModal(modalType) {
             switch (modalType) {
@@ -319,6 +328,7 @@ export default {
             if (confirm("정말로 탈퇴하시겠습니까?")) {
                 await this.requestDeleteAccountToSpring({ id: this.account.id });
                 alert('탈퇴가 완료되었습니다! 이용해주셔서 감사합니다')
+                this[LOGIN_COMPLETE](false)
 
                 try {
                     await router.push('/');
@@ -327,10 +337,22 @@ export default {
                 }
             }
         },
+    },
 
+    computed: {
+        ...mapState(accountModule, ['isAuthenticated', 'account'])
+    },
+
+    async created() {
+        this.userToken = localStorage.getItem("userToken")
+
+        if (this.userToken == null) {
+            this[LOGIN_COMPLETE](false)
+        } else {
+            this[LOGIN_COMPLETE](true)
+        }
     },
 }
-
 </script>
 
 <style scoped>
