@@ -136,7 +136,8 @@
 
 <script>
 import AWS from 'aws-sdk'
-import env from '@/env'
+import env from '../../env'
+// import env from '@/env'
 
 export default {
   data() {
