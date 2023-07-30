@@ -5,8 +5,15 @@
     </div>
     <div class="contents_box6">
       <div class="product_info_image">
-        <div class="image_box">
+        <div class="image_box" v-if="restaurant.restaurantImagesPathList.length > 0">
           <v-img :src="getS3ImageUrl(restaurant.restaurantImagesPathList[0])" :width="440" :height="400"></v-img>
+        </div>
+        <!-- <div v-else class="no-image-text">
+          <v-img :src="'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs'">이미지가 등록되지
+            않았습니다</v-img>
+        </div> -->
+        <div v-else class="no-image-text">
+          <p>이미지가 등록되지 않았습니다</p>
         </div>
 
         <div class="image_gallery">
@@ -480,5 +487,33 @@ export default {
   font-weight: 400;
   line-height: 1.57;
   color: #555;
+}
+
+/* .no-image-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+} */
+.no-image-text {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 400px;
+  /* 높이 조정, 원하는 크기로 변경 가능 */
+  background-color: #f3f3f3;
+  /* 이미지가 없을 때 배경색 지정 */
+}
+
+.no-image-text p {
+  font-size: 16px;
+  color: #999;
 }
 </style>
