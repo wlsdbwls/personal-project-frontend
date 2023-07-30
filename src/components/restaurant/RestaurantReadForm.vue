@@ -153,8 +153,8 @@ export default {
       modalImageHeight: 0,
       showReviewRegisterDialog: false,
 
-      awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
-      awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+      awsBucketName: 'vue-s3-bucket',
+      awsBucketRegion: 'ap-northeast-2',
       awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOL_ID,
     }
   },
@@ -489,17 +489,6 @@ export default {
   color: #555;
 }
 
-/* .no-image-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #888;
-  text-align: center;
-} */
 .no-image-text {
   margin-top: 30px;
   display: flex;
@@ -507,9 +496,7 @@ export default {
   align-items: center;
   height: 400px;
   width: 400px;
-  /* 높이 조정, 원하는 크기로 변경 가능 */
   background-color: #f3f3f3;
-  /* 이미지가 없을 때 배경색 지정 */
 }
 
 .no-image-text p {

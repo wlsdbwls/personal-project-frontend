@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     ...mapMutations(accountModule, ['LOGIN_COMPLETE']),
-    ...mapMutations(restaurantModule, ['SET_SEARCH_KEYWORD']),
+    // ...mapMutations(restaurantModule, ['SET_SEARCH_KEYWORD']),
 
     // 여기서 롤타입까지 받아와보자
     ...mapActions(accountModule, ['requestNicknameToSpring',
