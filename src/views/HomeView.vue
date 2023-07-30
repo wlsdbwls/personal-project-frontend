@@ -63,8 +63,8 @@ export default {
       likedRestaurants: [],
       restaurantAverageRatings: {},
 
-      awsBucketName: env.api.MAIN_AWS_BUCKET_NAME,
-      awsBucketRegion: env.api.MAIN_AWS_BUCKET_REGION,
+      awsBucketName: 'vue-s3-bucket',
+      awsBucketRegion: 'ap-northeast-2',
       awsIdentityPoolId: env.api.MAIN_AWS_IDENTITY_POOL_ID,
     }
   },
