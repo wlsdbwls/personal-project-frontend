@@ -193,7 +193,7 @@ export default {
 }
 
 .star-rating {
-    margin-right: -55px;
+    margin-right: -50px;
     font-size: 1.2rem;
     width: 5em;
     margin-top: -2px;
