@@ -161,7 +161,7 @@ export default {
       s3fileList: [],
       awsBucketName: 'vue-s3-bucket',
       awsBucketRegion: 'ap-northeast-2',
-      awsIdentityPoolId: env.api.MAIN_AWS_IDENTITY_POOL_ID,
+      awsIdentityPoolId: 'ap-northeast-2:d8f9ce43-76a4-4132-bf46-6eed6fd65340',
       s3: null,
       // startAfterAwsS3Bucket: null,
 
