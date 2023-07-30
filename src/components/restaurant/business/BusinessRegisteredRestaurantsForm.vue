@@ -51,7 +51,10 @@ export default {
         return {
             userToken: '',
             searchTerm: '',
-            id: null
+            id: null,
+
+            awsBucketName: 'vue-s3-bucket',
+            awsBucketRegion: 'ap-northeast-2',
         };
     },
     methods: {
@@ -61,10 +64,10 @@ export default {
         },
 
         getS3ImageUrl(imageKey) {
-            const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
-            const bucketName = env.api.MAIN_AWS_BUCKET_NAME
+            // const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
+            // const bucketName = env.api.MAIN_AWS_BUCKET_NAME
 
-            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`;
+            return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${imageKey}`
         },
 
         getVisitor(restaurantId) {
