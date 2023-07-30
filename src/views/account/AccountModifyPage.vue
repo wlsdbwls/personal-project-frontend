@@ -14,12 +14,12 @@ const accountModule = 'accountModule'
 
 export default {
     name: "AccountModifyPage",
-    props: {
-        id: {
-            type: Number,
-            required: true,
-        },
-    },
+    // props: {
+    //     id: {
+    //         type: Number,
+    //         required: true,
+    //     },
+    // },
     components: {
         AccountModifyForm,
     },

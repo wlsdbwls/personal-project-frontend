@@ -152,7 +152,7 @@ export default {
     },
     methods: {
         ...mapActions(accountModule, ['requestSpringToCheckEmailDuplication',
-            'requestEmailCodeToSpring']),
+            'requestEmailCodeToSpring', 'requestCheckBusinessNumberToSpring']),
         onSubmit() {
             if (!this.businessNumber) {
                 alert("사업자 번호를 입력해주세요!")
@@ -265,9 +265,16 @@ export default {
             }
         },
 
-        checkDuplicateBusinessNumber() {
-
+        async checkDuplicateBusinessNumber() {
+            if (!this.validateBusinessNumber()) {
+                alert("유효한 사업자 번호를 입력하세요!");
+                return;
+            }
+            // 유효한 사업자 번호일 경우 서버에 중복 여부 요청
+            const { businessNumber } = this;
+            const isBusinessNumberDuplicated = await this.requestCheckBusinessNumberToSpring({ businessNumber });
         },
+
 
         sanitizeBusinessNumber() {
             this.businessNumber = this.businessNumber.replace(/[^\d]/g, '');

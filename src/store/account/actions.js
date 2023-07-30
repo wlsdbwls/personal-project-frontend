@@ -40,6 +40,24 @@ export default {
                 alert("문제 발생!")
             })
     },
+    requestCheckBusinessNumberToSpring({ }, payload) {
+        const { businessNumber } = payload
+        console.log('businessNumber: ' + businessNumber)
+
+        return axiosInst.springAxiosInst.get(`/account/check-businessNumber/${businessNumber}`)
+            .then((resCheckedBusinessNumber) => {
+                if (resCheckedBusinessNumber.data) {
+                    alert('사용 가능한 사업자 번호입니다!')
+                    return true
+                } else {
+                    alert('중복된 사업자 번호입니다!')
+                    return false
+                }
+            })
+            .catch((res) => {
+                alert("문제 발생!")
+            })
+    },
     requestBusinessRegisterAccountToSpring({ }, payload) {
         const roleType = 'BUSINESS';
         payload.roleType = roleType;
