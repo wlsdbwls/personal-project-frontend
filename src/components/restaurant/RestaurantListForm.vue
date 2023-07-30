@@ -74,9 +74,13 @@ export default {
             likedRestaurants: [],
             restaurantAverageRatings: {},
 
-            awsBucketName: env.api.MAIN_AWS_BUCKET_NAME,
-            awsBucketRegion: env.api.MAIN_AWS_BUCKET_REGION,
-            awsIdentityPoolId: env.api.MAIN_AWS_IDENTITY_POOL_ID,
+            // awsBucketName: env.api.MAIN_AWS_BUCKET_NAME,
+            // awsBucketRegion: env.api.MAIN_AWS_BUCKET_REGION,
+            // awsIdentityPoolId: env.api.MAIN_AWS_IDENTITY_POOL_ID,
+
+            awsBucketName: process.env.VUE_APP_AWS_BUCKET_NAME,
+            awsBucketRegion: process.env.VUE_APP_AWS_BUCKET_REGION,
+            awsIdentityPoolId: process.env.VUE_APP_AWS_IDENTITY_POOL_ID,
         }
     },
 

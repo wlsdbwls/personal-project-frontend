@@ -179,7 +179,7 @@ button {
     -webkit-text-fill-color: #fff58c;
 }
 
-<style scoped>h2 {
+h2 {
     margin-bottom: 20px;
 }
 
