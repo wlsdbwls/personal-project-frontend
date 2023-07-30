@@ -20,29 +20,50 @@
         </div>
 
         <div class="category">
-          <label><button class="ico_category"><v-icon alt="삼선 메뉴 아이콘">mdi-menu</v-icon></button></label>
+          <v-menu offset-y>
+            <template v-slot:activator="{ on }">
+              <button @click="on.click" class="ico_category">
+                <v-icon alt="삼선 메뉴 아이콘">mdi-menu</v-icon>
+              </button>
+            </template>
+            <v-list>
+              <!-- 메뉴 항목 1 -->
+              <v-list-item>
+                <v-list-item-content>
+                  <v-list-item-title>#맛집 태그</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-menu>
 
-          <label><button style="color: black;" @click="showFoodListPage" class="totalfood">
+          <label style="margin-right: 250px;"><button style="color: black;" @click="showFoodListPage" class="totalfood">
               <span class="food-list-label">맛집 리스트</span> </button></label>
           <!-- <label><a href="#" target="_blank" class="recommend"><span>추천 맛집</span></a></label> -->
           <!-- 내 주변 맛집으로 넣어도 괜찮을 듯 함 -->
         </div>
-        <label v-if="isAuthenticated"><button>
-            <p>반가워요 <span class="totalfood">{{ account.nickName }}님</span></p>
-          </button></label>
+
         <div class="search_my_cart_box">
+          <div style="display:flex; margin-left: -150px;">
+            <label v-if="isAuthenticated">
+              <p>반가워요 <span>{{ account.nickName }}님</span></p>
+            </label>
+          </div>
           <div class="searchbar_wrap"><input type="text" maxlength="40"><v-icon class="icon_search"
               alt="돋보기">mdi-magnify</v-icon>
           </div>
-          <!-- 마이페이지 - 일반 회원, 사업자 회원 구분! -->
-          <template>
+
+          <template v-if="!isAuthenticated">
+            <label><button @click="beforeLogIn" class="icon_mypage"><v-icon alt="마이페이지 아이콘"
+                  size="32">mdi-account-outline</v-icon></button></label>
+          </template>
+
+          <template v-if="isAuthenticated">
             <label v-if="roleType === 'NORMAL'"><button @click="goToNormalMyPage" class="icon_mypage"><v-icon
                   alt="마이페이지 아이콘" size="32">mdi-account-outline</v-icon></button></label>
-          </template>
-          <template>
             <label v-if="roleType === 'BUSINESS'"><button @click="goToBusinessMyPage" class="icon_mypage"><v-icon
                   alt="마이페이지 아이콘" size="32">mdi-account-outline</v-icon></button></label>
           </template>
+
         </div>
       </div>
     </div>
@@ -72,6 +93,22 @@ export default {
       roleType: '',
     }
   },
+
+  watch: {
+    isAuthenticated: {
+      immediate: true, // 초기 로딩 시에도 즉시 실행하도록 설정
+      handler(newValue) {
+        if (newValue) {
+          // 인증 상태가 true로 변경되었을 때의 로직
+          this.updateUserInfo();
+        } else {
+          // 인증 상태가 false로 변경되었을 때의 로직
+          this.resetUserInfo();
+        }
+      }
+    }
+  },
+
   computed: {
     ...mapState(accountModule, ['isAuthenticated', 'account'])
   },
@@ -81,6 +118,7 @@ export default {
     // 여기서 롤타입까지 받아와보자
     ...mapActions(accountModule, ['requestNicknameToSpring',
       'requestAccountToSpring', 'requestAccountRoleToSpring']),
+
     showFoodListPage() {
       router.push('/restaurant-list-page').catch(() => { })
     },
@@ -96,6 +134,14 @@ export default {
     goToHome() {
       router.push('/').catch(() => { })
     },
+
+    beforeLogIn() {
+      if (!this.isAuthenticated) {
+        alert('로그인이 필요합니다!')
+        router.push('/signin').catch(() => { });
+      }
+    },
+
     goToNormalMyPage() {
       if (!this.isAuthenticated) {
         alert('로그인이 필요합니다!')
@@ -112,9 +158,28 @@ export default {
         router.push('/business-mypage').catch(() => { });
       }
     },
+
+    async updateUserInfo() {
+      this.userToken = localStorage.getItem("userToken")
+
+      if (this.userToken != null) {
+        await this.requestAccountToSpring({ userToken: this.userToken })
+        await this.requestNicknameToSpring(this.account.id)
+        this.roleType = await this.requestAccountRoleToSpring({ id: this.account.id })
+      }
+    },
+
+    resetUserInfo() {
+      this.userToken = null;
+      this.nickName = '';
+      this.id = '';
+      this.roleType = '';
+    },
+
     signOut() {
       localStorage.removeItem("userToken")
       this[LOGIN_COMPLETE](false)
+      this.resetUserInfo(); // 로그아웃 시에도 유저 정보 초기화
       router.push('/').catch(() => { });
     },
   },
@@ -278,9 +343,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /* justify-content: flex-end; */
-  /* 오른쪽 정렬로 설정합니다. */
-
+  margin-right: -20px;
 }
 
 .icon_mypage {
@@ -317,6 +380,6 @@ export default {
 }
 
 .icon_search {
-  /* margin-left: 15px; */
+  margin-left: 15px;
 }
 </style>
