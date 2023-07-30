@@ -48,12 +48,14 @@
               <p>반가워요 <span>{{ account.nickName }}님</span></p>
             </label>
           </div>
-          <div class="searchbar_wrap"><input type="text" maxlength="40"><v-icon class="icon_search"
-              alt="돋보기">mdi-magnify</v-icon>
+
+          <div class="searchbar_wrap">
+            <input type="text" maxlength="40" v-model="searchKeyword" v-on:keyup.enter="search(searchKeyword)">
+            <v-icon class="icon_search" alt="돋보기" @click="search(searchKeyword)">mdi-magnify</v-icon>
           </div>
 
           <template v-if="!isAuthenticated">
-            <label><button @click="beforeLogIn" class="icon_mypage"><v-icon alt="마이페이지 아이콘"
+            <label><button @click="beforeLogIn" class="icon_mAypage"><v-icon alt="마이페이지 아이콘"
                   size="32">mdi-account-outline</v-icon></button></label>
           </template>
 
@@ -73,16 +75,23 @@
 <script>
 
 import router from '@/router'
+// import SearchResult from '@/components/restaurant/SearchResult.vue'
 
 import {
   LOGIN_COMPLETE,
+  SET_SEARCH_KEYWORD,
 } from '@/store/account/mutation-types'
 
 import { mapActions, mapState, mapMutations } from 'vuex'
 
 const accountModule = 'accountModule'
+const restaurantModule = 'restaurantModule'
 
 export default {
+  // components: {
+  //   SearchResult
+  // },
+
   data() {
     return {
       showAccountForm: false,
@@ -91,6 +100,8 @@ export default {
       id: '',
       userToken: '',
       roleType: '',
+      // isResultShow: true,
+      searchKeyword: this.$route.params.searchKeyword,
     }
   },
 
@@ -114,6 +125,7 @@ export default {
   },
   methods: {
     ...mapMutations(accountModule, ['LOGIN_COMPLETE']),
+    ...mapMutations(restaurantModule, ['SET_SEARCH_KEYWORD']),
 
     // 여기서 롤타입까지 받아와보자
     ...mapActions(accountModule, ['requestNicknameToSpring',
@@ -158,6 +170,26 @@ export default {
         router.push('/business-mypage').catch(() => { });
       }
     },
+
+    // search(searchKeyword) {
+    //   if (searchKeyword !== '') { //검색어를 입력한 경우
+    //     this.$router.push({
+    //       name: "SearchPage",
+    //       params: {
+    //         searchKeyword: this.searchKeyword,
+    //         isResultShow: true,
+    //       },
+    //     });
+    //     this.keyword = ''
+    //     console.log('"', keyword, '"' + ' 검색')
+    //   } else {
+    //     alert('검색어를 입력해주세요!')  //검색어를 입력하지 않은 경우
+    //   }
+    // },
+
+    // keywordChanged() {
+    //   this.isResultShow = false
+    // },
 
     async updateUserInfo() {
       this.userToken = localStorage.getItem("userToken")

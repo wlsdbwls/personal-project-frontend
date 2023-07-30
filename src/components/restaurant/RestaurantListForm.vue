@@ -73,6 +73,10 @@ export default {
             id: null,
             likedRestaurants: [],
             restaurantAverageRatings: {},
+
+            awsBucketName: env.api.MAIN_AWS_BUCKET_NAME,
+            awsBucketRegion: env.api.MAIN_AWS_BUCKET_REGION,
+            awsIdentityPoolId: env.api.MAIN_AWS_IDENTITY_POOL_ID,
         }
     },
 
@@ -125,10 +129,10 @@ export default {
 
         // 이미지 가져오기
         getS3ImageUrl(imageKey) {
-            const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
-            const bucketName = env.api.MAIN_AWS_BUCKET_NAME
+            // const bucketRegion = env.api.MAIN_AWS_BUCKET_REGION
+            // const bucketName = env.api.MAIN_AWS_BUCKET_NAME
 
-            return `https://${bucketName}.s3.${bucketRegion}.amazonaws.com/${imageKey}`
+            return `https://${this.awsBucketName}.s3.${this.awsBucketRegion}.amazonaws.com/${imageKey}`
         },
 
         // 평균 평점 가져오기
