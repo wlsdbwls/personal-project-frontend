@@ -58,6 +58,24 @@ export default {
                 alert("문제 발생!")
             })
     },
+    requestCheckNicknameToSpring({ }, payload) {
+        const { nickName } = payload
+        console.log('nickName: ' + nickName)
+
+        return axiosInst.springAxiosInst.get(`/account/check-nickname/${nickName}`)
+            .then((resCheckedNickname) => {
+                if (resCheckedNickname.data) {
+                    alert('사용 가능한 닉네임입니다!')
+                    return true
+                } else {
+                    alert('중복된 닉네임입니다!')
+                    return false
+                }
+            })
+            .catch((res) => {
+                alert("문제 발생!")
+            })
+    },
     requestBusinessRegisterAccountToSpring({ }, payload) {
         const roleType = 'BUSINESS';
         payload.roleType = roleType;

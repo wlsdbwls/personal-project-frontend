@@ -25,7 +25,7 @@
                         <dd>
                             <input type="text" v-model="email" placeholder="이메일을 입력하세요" />
                             <v-btn text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" @click="checkDuplicateEmail">
-                            이메일 중복 <br/> 확인
+                            이메일 <br/> 중복 확인
                             </v-btn>
                             <p v-show="email && !validateEmail()" class="input-error">이메일 주소를 정확히 입력해주세요</p>
                         </dd>
@@ -74,6 +74,9 @@
                     <dt><span class="required">*</span>닉네임</dt>
                         <dd>
                             <input type="text" v-model="nickName" placeholder="닉네임을 입력하세요"></input>
+                            <v-btn text large outlined style="font-size: 13px; margin-left: 20px; width:50px;" @click="checkDuplicateNickname">
+                            닉네임 <br/>중복 확인
+                            </v-btn>
                             <p v-show="nickName && !validateNickName()" class="input-error">닉네임은 영문자, 한글, 숫자로 1~8글자 이내로 입력하세요.</p>
                         </dd>
                     </dl>
@@ -144,14 +147,16 @@ export default {
             detailAddress: null,
 
             nickName: "",
+            isNicknameVerified: false,
             userName: "",
             birth: null,
             gender: null,
             businessNumber: '',
+            isBusinessNumberVerified: false,
         }
     },
     methods: {
-        ...mapActions(accountModule, ['requestSpringToCheckEmailDuplication',
+        ...mapActions(accountModule, ['requestSpringToCheckEmailDuplication', 'requestCheckNicknameToSpring',
             'requestEmailCodeToSpring', 'requestCheckBusinessNumberToSpring']),
         onSubmit() {
             if (!this.businessNumber) {
@@ -272,7 +277,17 @@ export default {
             }
             // 유효한 사업자 번호일 경우 서버에 중복 여부 요청
             const { businessNumber } = this;
-            const isBusinessNumberDuplicated = await this.requestCheckBusinessNumberToSpring({ businessNumber });
+            this.isBusinessNumberVerified = await this.requestCheckBusinessNumberToSpring({ businessNumber });
+        },
+
+        async checkDuplicateNickname() {
+            if (!this.validateNickName()) {
+                alert("유효한 닉네임을 입력하세요!");
+                return;
+            }
+            // 유효한 닉네임일 경우 서버에 중복 여부 요청
+            const { nickName } = this;
+            this.isNicknameVerified = await this.requestCheckNicknameToSpring({ nickName });
         },
 
 
