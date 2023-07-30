@@ -174,7 +174,6 @@ export default {
         this.saveLikedRestaurants(updatedLikedRestaurants)
 
         this.likedRestaurants = updatedLikedRestaurants
-        await location.reload()
 
       } else {
         await this.requestLikeRestaurantToSpring({ userToken: this.userToken, restaurantId })
@@ -184,7 +183,6 @@ export default {
         this.saveLikedRestaurants(likedRestaurants)
 
         this.likedRestaurants = likedRestaurants
-        location.reload()
       }
     },
 
